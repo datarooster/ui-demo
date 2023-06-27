@@ -32,14 +32,7 @@ export function VolChart({showSegments}) {
   for (let i = 0; i < 20; i++) {
     const time = new Date(startTime.getTime() + i * 30 * 1000); // Increment time by 30 seconds
   
-    // Generate a random value between 80 and 85
-    const value = Math.random() * (8) + 80;
-  
-    // Add the data point to the data array
-    data[0].data.push({
-      primary: time,
-      secondary: value
-    });
+    
     if (showSegments){
       const valu2 = Math.random() * (20) + 40;
     
@@ -58,6 +51,15 @@ export function VolChart({showSegments}) {
           secondary: valu3
         });
     }
+    } else {
+      // Generate a random value between 80 and 85
+    const value = Math.random() * (8) + 80;
+  
+    // Add the data point to the data array
+    data[0].data.push({
+      primary: time,
+      secondary: value
+    });
     }
   }
 
@@ -65,14 +67,7 @@ export function VolChart({showSegments}) {
   for (let i = 20; i < 37; i++) {
     const time = new Date(startTime.getTime() + i * 30 * 1000); // Increment time by 30 seconds
   
-    // Generate a random value between 80 and 85
-    const value = Math.random() * (5) + 40;
-  
-    // Add the data point to the data array
-    data[0].data.push({
-      primary: time,
-      secondary: value
-    });
+    
 
     if (showSegments){
       // Generate a random value between 80 and 85
@@ -93,6 +88,15 @@ export function VolChart({showSegments}) {
           secondary: valu3
         });
       }
+    } else {
+      // Generate a random value between 80 and 85
+    const value = Math.random() * (5) + 40;
+  
+    // Add the data point to the data array
+    data[0].data.push({
+      primary: time,
+      secondary: value
+    });
     }
   }
   

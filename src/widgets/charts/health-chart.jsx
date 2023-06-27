@@ -4,13 +4,6 @@ import { Chart } from "react-charts";
 export function HealthChart({showSegments}) {
   
   let data = [
-    {
-      label: "Total Health",
-      data: []
-    }
-  ];
-  if (showSegments){
-    data = [
         {
           label: "Total Health",
           data: [],
@@ -32,7 +25,7 @@ export function HealthChart({showSegments}) {
             data: [],
           }
       ];
-  }
+
   
   const startTime = new Date(); // Get the current time
   
