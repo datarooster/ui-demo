@@ -6,55 +6,80 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import Collapse from '@mui/material/Collapse';
+import Button from '@mui/material/Button';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 function createData(
-  name,
-  calories,
-  fat,
-  carbs,
-  protein,
+  id,
+  timestamp,
+  merchant,
+  transaction,
+  user_id,
+  source_id,
 ) {
-  return { name, calories, fat, carbs, protein };
+  return { id, timestamp, merchant, transaction, user_id, source_id };
 }
 
-const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
-];
+const rows = Array.from({ length: 30 }, (_, index) =>
+  createData(
+    `ID${index + 1}`,
+    new Date().toISOString(),
+    `Merchant ${index + 1}`,
+    `Transaction ${index + 1}`,
+    `User ID ${index + 1}`,
+    `Source ID ${index + 1}`
+  )
+);
 
 export function SamplesTable() {
-  return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+  const [open, setOpen] = React.useState(false);
+    const toggleOpen = () => setOpen(cur => !cur);
+
+
+  return (<>
+    {/* <div  className=" w-full flex justify-center">
+        
+
+          <Button variant="outlined" onClick={toggleOpen} endIcon={<KeyboardArrowDownIcon />}>
+            Show Data Samples
+          </Button>
+
+    </div>
+  <Collapse in={open}> */}
+    <TableContainer component={Paper} style={{ maxHeight: 300 }}>
+      <Table sx={{ minWidth: 450 }} size="small" aria-label="a dense table">
         <TableHead>
           <TableRow>
-            <TableCell>Dessert (100g serving)</TableCell>
-            <TableCell align="right">Calories</TableCell>
-            <TableCell align="right">Fat&nbsp;(g)</TableCell>
-            <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-            <TableCell align="right">Protein&nbsp;(g)</TableCell>
+            <TableCell>ID</TableCell>
+            <TableCell align="right">Timestamp</TableCell>
+            <TableCell align="right">Merchant</TableCell>
+            <TableCell align="right">Transaction</TableCell>
+            <TableCell align="right">User ID</TableCell>
+            <TableCell align="right">Source ID</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {rows.map((row) => (
             <TableRow
-              key={row.name}
+              key={row.id}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
               <TableCell component="th" scope="row">
-                {row.name}
+                {row.id}
               </TableCell>
-              <TableCell align="right">{row.calories}</TableCell>
-              <TableCell align="right">{row.fat}</TableCell>
-              <TableCell align="right">{row.carbs}</TableCell>
-              <TableCell align="right">{row.protein}</TableCell>
+              <TableCell align="right">{row.timestamp}</TableCell>
+              <TableCell align="right">{row.merchant}</TableCell>
+              <TableCell align="right">{row.transaction}</TableCell>
+              <TableCell align="right">{row.user_id}</TableCell>
+              <TableCell align="right">{row.source_id}</TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
     </TableContainer>
+    {/* </Collapse> */}
+    </>
   );
 }

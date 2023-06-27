@@ -34,7 +34,7 @@ export function VolChart({showSegments}) {
   
     
     if (showSegments){
-      const valu2 = Math.random() * (20) + 40;
+      const valu2 = Math.random() * (20) + 80;
     
       // Add the data point to the data array
       data[1].data.push({
@@ -43,7 +43,7 @@ export function VolChart({showSegments}) {
       });
 
       for (let j=2; j<5; j++){
-        const valu3 = Math.random() * (3) + 10;
+        const valu3 = Math.random() * (20) + 80;
     
         // Add the data point to the data array
         data[j].data.push({
@@ -53,7 +53,7 @@ export function VolChart({showSegments}) {
     }
     } else {
       // Generate a random value between 80 and 85
-    const value = Math.random() * (8) + 80;
+    const value = Math.random() * (3) + 80;
   
     // Add the data point to the data array
     data[0].data.push({
@@ -80,7 +80,7 @@ export function VolChart({showSegments}) {
       });
 
       for (let j=2; j<5; j++){
-        const valu3 = Math.random() * (3) + 10;
+        const valu3 = Math.random() * (10) + 80;
     
         // Add the data point to the data array
         data[j].data.push({

@@ -68,7 +68,7 @@ export function Sidenav({ brandImg, brandName, routes }) {
                 <NavLink to={`/${layout}${path}`}>
                   {({ isActive }) => (
                     <Button
-                      variant={isActive ? "gradient" : "text"}
+                      variant={isActive ? "text" : "text"}
                       color={
                         isActive
                           ? sidenavColor

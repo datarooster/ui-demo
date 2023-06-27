@@ -34,20 +34,10 @@ import {
   import DangerousIcon from '@mui/icons-material/Dangerous';
   
 function createData(
-  name,
-  calories,
-  fat,
-  carbs,
-  protein,
-  price,
+  category, level, title, summary
 ) {
   return {
-    name,
-    calories,
-    fat,
-    carbs,
-    protein,
-    price,
+    category, level, title, summary,
     history: [
       {
         date: '2020-01-05',
@@ -80,15 +70,16 @@ function Row(props) {
           </IconButton>
         </TableCell>
         <TableCell component="th" scope="row">
-          {row.name}
+          {row.category}
         </TableCell>
-        <TableCell align="left">{row.calories}</TableCell>
-        <TableCell align="left">{row.fat}</TableCell>
+        <TableCell align="left">{row.level}</TableCell>
+        <TableCell align="left">{row.title}</TableCell>
+        <TableCell align="left">{row.summary}</TableCell>
         <TableCell align="center">
 
-        <Button variant="contained">
-            Resolve
-        </Button>
+            <Button variant="contained">
+                Resolve
+            </Button>
         </TableCell>
       </TableRow>
       <TableRow>
@@ -131,39 +122,30 @@ function Row(props) {
 }
 
 const rows = [
-  createData('Total volume drop', <><DangerousIcon/></>, 'Average volume has dropped by 25% since 2 hours ago'),
-  createData('Segment  volume drop', <><WarningIcon/></>, 'Average volume has dropped by 16% for segment “customers-acme” since 2 hours ago'),
- 
-];
+    createData('Volume',  <><DangerousIcon/></>, 'Total volume drop', 'Average volume has dropped by 25% since 2 hours ago'),
+    createData('Volume', <><WarningIcon/></>, 'Segment volume drop', 'Average volume has dropped by 16% for segment "customers-acme" since 2 hours ago'),
+    createData('Validity',  <><DangerousIcon/></>, '“title” completeness', '20% of segments show an increased amount of NULL values in column "title"'),
+    createData('Validity', <><WarningIcon/></>, 'Unidentified value', 'New value observed in column "source_type" with value "META"'),
+    createData('Schema',  <><DangerousIcon/></>, 'Missing column', 'Column "address" is missing in the dataset'),
+    createData('Schema', <><WarningIcon/></>, 'Column mismatch', 'Mismatch found in column "price" data type, expected integer'),
+    createData('Column Anomalies',  <><DangerousIcon/></>, 'Outliers in "revenue"', 'Multiple outliers detected in the "revenue" column'),
+    createData('Column Anomalies', <><WarningIcon/></>, 'Missing values in "quantity"', 'Significant amount of missing values found in the "quantity" column'),
+  ];
+  
 
 export function VolAnomaliesTable (){
 
-    const [open, setOpen] = useState(false);
-    const toggleOpen = () => setOpen(cur => !cur);
-
   return (<>
-    <div  className="mt-12 w-full flex justify-center">
-        {/* <IconButton
-            aria-label="expand row"
-            size="large"
-            onClick={toggleOpen}
-          >
-            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-          </IconButton> */}
 
-          <Button variant="outlined" onClick={toggleOpen} endIcon={<KeyboardArrowDownIcon />}>
-            Show More
-          </Button>
-
-    </div>
-  <Collapse in={open}>
     <TableContainer component={Paper}>
       <Table aria-label="collapsible table">
         <TableHead>
           <TableRow>
             <TableCell />
-            <TableCell>Title</TableCell>
+            <TableCell>Issue Category</TableCell>
             <TableCell align="left">Level</TableCell>
+            <TableCell>Issue Title</TableCell>
+            
             <TableCell align="left">Summary</TableCell>
             <TableCell align="center">Actions</TableCell>
           </TableRow>
@@ -175,7 +157,7 @@ export function VolAnomaliesTable (){
         </TableBody>
       </Table>
     </TableContainer>
-    </Collapse>
+
     </>
   );
 }
