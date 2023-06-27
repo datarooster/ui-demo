@@ -42,9 +42,9 @@ Footer.defaultProps = {
   brandName: "Datarooster.ai",
   brandLink: "https://datarooster.ai",
   routes: [
-    { name: "About Us", path: "https://www.creative-tim.com/presentation" },
-    { name: "Blog", path: "https://www.creative-tim.com/blog" },
-    { name: "License", path: "https://www.creative-tim.com/license" },
+    { name: "About Us", path: "https://www.datarooster.com/presentation" },
+    { name: "Blog", path: "https://www.datarooster.com/blog" },
+    { name: "License", path: "https://www.datarooster.com/license" },
   ],
 };
 

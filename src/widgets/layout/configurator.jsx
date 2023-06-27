@@ -148,7 +148,7 @@ export function Configurator() {
           <hr />
           <div className="my-8 flex flex-col gap-4">
             <a
-              href="https://www.creative-tim.com/product/material-tailwind-dashboard-react?rel=mtdr"
+              href="https://www.datarooster.com/product/material-tailwind-dashboard-react?rel=mtdr"
               target="_black"
             >
               <Button variant="gradient" fullWidth>
