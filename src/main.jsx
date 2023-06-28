@@ -9,7 +9,7 @@ import "../public/css/tailwind.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <BrowserRouter basename={process.env.PUBLIC_URL}>
+    <BrowserRouter>
       <ThemeProvider>
         <MaterialTailwindControllerProvider>
           <App />
