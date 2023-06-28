@@ -7,9 +7,13 @@ import { ThemeProvider } from "@material-tailwind/react";
 import { MaterialTailwindControllerProvider } from "@/context";
 import "../public/css/tailwind.css";
 
+const pathPrefix = process.env.NODE_ENV === 'production'
+  ? '/ui-demo'
+  : '';
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <BrowserRouter basename="/ui-demo">
+    <BrowserRouter basename={pathPrefix}>
       <ThemeProvider>
         <MaterialTailwindControllerProvider>
           <App />
