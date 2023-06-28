@@ -3,7 +3,7 @@
   "private": false,
   "version": "2.0.1",
   "type": "module",
-  "homepage": "https://demo.datatooster.ai",
+  "homepage": "https://datarooster.github.io",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
