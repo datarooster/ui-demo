@@ -1,6 +1,6 @@
 {
   "name": "material-tailwind-dashboard-react",
-  "private": true,
+  "private": false,
   "version": "2.0.1",
   "type": "module",
   "homepage": "https://datarooster.github.io/ui-demo",
