@@ -8,7 +8,7 @@ import { MaterialTailwindControllerProvider } from "@/context";
 import "../public/css/tailwind.css";
 
 const pathPrefix = process.env.NODE_ENV === 'production'
-  ? '/ui-demo'
+  ? '/'
   : '';
 
 ReactDOM.createRoot(document.getElementById("root")).render(
