@@ -83,7 +83,7 @@ function a11yProps(index) {
 
 export function ProbeView() {
   const [value, onChange] = useState([new Date(), new Date()]);
-  const [selectedValueSegments, setSelectedValueSegments] = useState(false);
+  const [selectedValueSegments, setSelectedValueSegments] = useState(true);
 
   const handleSetSelectedValueSegments = (event) => {
     setSelectedValueSegments(event.target.checked);
@@ -112,8 +112,8 @@ export function ProbeView() {
         
       </div>
       <div className="flex flex-row flex-start gap-x-6">
-        <div className="w-60">
-          <img className=" shadow shadow-blue-gray-900/50"  src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Apache_Spark_logo.svg/1024px-Apache_Spark_logo.svg.png?20210416091439" alt="avatar" size="xxl" />
+        <div className="w-40">
+          <img className=" shadow shadow-blue-gray-900/50"  src="/img/sparklogo.png" alt="avatar" size="xl" />
         </div>
         <div className=" flex flex-col justify-center gap-y-2">
         <Typography variant="paragraph" color="blue-gray">
