@@ -16,6 +16,7 @@ import TreeItem, { treeItemClasses } from '@mui/lab/TreeItem';
 import Collapse from '@mui/material/Collapse';
 import { useSpring, animated } from '@react-spring/web';
 
+import { Button } from "@material-tailwind/react";
 
 
 function MinusSquare(props) {
@@ -95,8 +96,9 @@ function MinusSquare(props) {
 import {
     timelineOppositeContentClasses,
   } from '@mui/lab/TimelineOppositeContent';
+import { Typography } from '@mui/material';
 export function SchemaView() {
-  return (
+  return (<div >
     <Timeline
       sx={{
         [`& .${timelineOppositeContentClasses.root}`]: {
@@ -113,14 +115,16 @@ export function SchemaView() {
           <TimelineConnector />
         </TimelineSeparator>
         <TimelineContent>
-
+        <Typography color="primary" className="mb-4">
+            <b>schema updated</b> v54</Typography>
+        <div className="">
         <TreeView
                 aria-label="customized"
                 defaultExpanded={['1']}
                 defaultCollapseIcon={<MinusSquare />}
                 defaultExpandIcon={<PlusSquare />}
                 defaultEndIcon={<CloseSquare />}
-                sx={{ height: 264, flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
+                sx={{ height: 164, flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
                 >
                 <StyledTreeItem nodeId="1" label="Order (object)">
                     <StyledTreeItem nodeId="2" label="orderId (int)" />
@@ -154,6 +158,9 @@ export function SchemaView() {
                     </StyledTreeItem>
 
                 </TreeView>
+            </div>
+
+            <Button size="sm" className="mt-6 mb-6">show diff</Button>
 
         </TimelineContent>
       </TimelineItem>
@@ -164,8 +171,29 @@ export function SchemaView() {
         <TimelineSeparator>
           <TimelineDot />
         </TimelineSeparator>
-        <TimelineContent>Code</TimelineContent>
+        <TimelineContent>
+            <Typography color="primary" className="mb-4">
+                <b>Type mismatch</b> in column <i>sale_source</i>
+            </Typography>
+        </TimelineContent>
       </TimelineItem>
-    </Timeline>
+
+      <TimelineItem>
+        <TimelineOppositeContent color="textSecondary">
+          09:20 am
+        </TimelineOppositeContent>
+        <TimelineSeparator>
+          <TimelineDot />
+        </TimelineSeparator>
+        <TimelineContent>
+            <Typography color="primary" className="mb-4">
+                <b>New nested schema registered</b> from Merchant-4
+            </Typography>
+            <Typography color="" className="mb-4">
+                item.attributes.customer_support
+            </Typography>
+        </TimelineContent>
+      </TimelineItem>
+    </Timeline></div>
   );
 }

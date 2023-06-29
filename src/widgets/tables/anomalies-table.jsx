@@ -129,12 +129,12 @@ export function AnomaliesTable ({category}){
       case 'Volume':
         rows = [
           createData(<><DangerousIcon/></>, 'Volume drop', 'Average volume has dropped by 25% since 2 hours ago'),
-          createData(<><WarningIcon/></>, 'Merchant drop', 'Average volume has dropped by 16% for segment "customers-acme" since 2 hours ago'),
+          createData(<><DangerousIcon/></>, 'Freshness Issue', 'No data from Merchant 7 for 10 hours'),
         ];
         break;
       case 'Validity':
           rows = [
-            createData( <><DangerousIcon/></>, '“title” completeness', '20% of segments show an increased amount of NULL values in column "title"'),
+            createData( <><DangerousIcon/></>, '“revenue” completeness', '20% of segments show an increased amount of NULL values in column "revenue"'),
             createData(<><WarningIcon/></>, 'Unidentified value', 'New value observed in column "source_type" with value "META"'),
           ];
           break;

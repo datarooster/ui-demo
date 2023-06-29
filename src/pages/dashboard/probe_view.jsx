@@ -236,7 +236,7 @@ export function ProbeView() {
                 </TabPanel>
 
                 <TabPanel value={tabVal} className="w-full" index={2}>
-                <div className="h-60">
+                <div className="">
                   <SchemaView/>
                 </div>
                 </TabPanel>
