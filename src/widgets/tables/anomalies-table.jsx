@@ -34,10 +34,10 @@ import {
   import DangerousIcon from '@mui/icons-material/Dangerous';
   
 function createData(
-  category, level, title, summary
+  level, title, summary
 ) {
   return {
-    category, level, title, summary,
+    level, title, summary,
     history: [
       {
         date: '2020-01-05',
@@ -70,9 +70,8 @@ function Row(props) {
           </IconButton>
         </TableCell>
         <TableCell component="th" scope="row">
-          {row.category}
+          {row.level}
         </TableCell>
-        <TableCell align="left">{row.level}</TableCell>
         <TableCell align="left">{row.title}</TableCell>
         <TableCell align="left">{row.summary}</TableCell>
         <TableCell align="center">
@@ -121,20 +120,40 @@ function Row(props) {
   );
 }
 
-const rows = [
-    createData('Volume',  <><DangerousIcon/></>, 'Total volume drop', 'Average volume has dropped by 25% since 2 hours ago'),
-    createData('Volume', <><WarningIcon/></>, 'Segment volume drop', 'Average volume has dropped by 16% for segment "customers-acme" since 2 hours ago'),
-    createData('Validity',  <><DangerousIcon/></>, '“title” completeness', '20% of segments show an increased amount of NULL values in column "title"'),
-    createData('Validity', <><WarningIcon/></>, 'Unidentified value', 'New value observed in column "source_type" with value "META"'),
-    createData('Schema',  <><DangerousIcon/></>, 'Missing column', 'Column "address" is missing in the dataset'),
-    createData('Schema', <><WarningIcon/></>, 'Column mismatch', 'Mismatch found in column "price" data type, expected integer'),
-    createData('Column Anomalies',  <><DangerousIcon/></>, 'Outliers in "revenue"', 'Multiple outliers detected in the "revenue" column'),
-    createData('Column Anomalies', <><WarningIcon/></>, 'Missing values in "quantity"', 'Significant amount of missing values found in the "quantity" column'),
-  ];
+
   
 
-export function VolAnomaliesTable (){
+export function AnomaliesTable ({category}){
+  let rows = [];
+  switch (category){
+      case 'Volume':
+        rows = [
+          createData(<><DangerousIcon/></>, 'Volume drop', 'Average volume has dropped by 25% since 2 hours ago'),
+          createData(<><WarningIcon/></>, 'Merchant drop', 'Average volume has dropped by 16% for segment "customers-acme" since 2 hours ago'),
+        ];
+        break;
+      case 'Validity':
+          rows = [
+            createData( <><DangerousIcon/></>, '“title” completeness', '20% of segments show an increased amount of NULL values in column "title"'),
+            createData(<><WarningIcon/></>, 'Unidentified value', 'New value observed in column "source_type" with value "META"'),
+          ];
+          break;
+      case 'Anomalies':
+        rows = [
+          createData(<><DangerousIcon/></>, 'Abnormal values', 'Abnormal values detected in the "total_shops" column'),
+          createData(<><WarningIcon/></>, 'Outliers in "revenue"', 'Increased outliers detected in the "revenue" column'),
+    
+        ];
+        break;
+      case 'Loss':
+          rows = [
+            createData(<><WarningIcon/></>, 'Loss detected', '1500+ Errors: "Protocol message contained a tag with an invalid wire type"'),
+            createData(<><WarningIcon/></>, 'Loss detected', '10K Errors: "Decoder throws exception when decoding an empty map"'),
+          ];
+          break;
+        
 
+  }
   return (<>
 
     <TableContainer component={Paper}>
@@ -142,7 +161,6 @@ export function VolAnomaliesTable (){
         <TableHead>
           <TableRow>
             <TableCell />
-            <TableCell>Issue Category</TableCell>
             <TableCell align="left">Level</TableCell>
             <TableCell>Issue Title</TableCell>
             

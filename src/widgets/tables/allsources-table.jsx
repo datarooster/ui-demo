@@ -16,6 +16,7 @@ import Paper from '@mui/material/Paper';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import { visuallyHidden } from '@mui/utils';
+import { Link } from "react-router-dom";
 
 // Import Moment.js for date formatting
 import moment from 'moment';
@@ -227,14 +228,16 @@ function EnhancedTableHead(props) {
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => {
                     return (
-                      <TableRow hover tabIndex={-1} key={row.dataSource} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                        <TableCell>{row.dataSource}</TableCell>
-                        <TableCell>{row.name}</TableCell>
-                        <TableCell align="right">
-                          {moment(row.lastUpdated).format('YYYY-MM-DD HH:mm:ss')}
-                        </TableCell>
-                        <TableCell align="right">{row.numberOfIssues}</TableCell>
-                      </TableRow>
+                      
+                        <TableRow hover tabIndex={-1} key={row.dataSource} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                          <TableCell><Link to="/dashboard/demo">{row.dataSource}</Link></TableCell>
+                          <TableCell><Link to="/dashboard/demo">{row.name}</Link></TableCell>
+                          <TableCell align="right"><Link to="/dashboard/demo">
+                            {moment(row.lastUpdated).format('YYYY-MM-DD HH:mm:ss')}
+                            </Link>
+                          </TableCell>
+                          <TableCell align="right"><Link to="/dashboard/demo">{row.numberOfIssues}</Link></TableCell>
+                        </TableRow>
                     );
                   })}
               </TableBody>

@@ -30,7 +30,7 @@ import {
   PencilIcon
 } from "@heroicons/react/24/outline";
 import { StatisticsCard } from "@/widgets/cards";
-import { HealthChart, VolChart } from "@/widgets/charts";
+import { AnomaliesChart, ValChart, VolChart, LossChart, SchemaView } from "@/widgets/charts";
 import {
   statisticsCardsData,
   statisticsChartsData,
@@ -43,7 +43,7 @@ import '@wojtekmaj/react-datetimerange-picker/dist/DateTimeRangePicker.css';
 import 'react-calendar/dist/Calendar.css';
 import 'react-clock/dist/Clock.css';
 
-import {VolAnomaliesTable, SamplesTable} from "@/widgets/tables";
+import {AnomaliesTable, SamplesTable} from "@/widgets/tables";
 
 
 import Tabs from '@mui/material/Tabs';
@@ -96,7 +96,7 @@ export function ProbeView() {
   };
 
   return (
-    <div className="mt-8">
+    <div className="mt-8" style={{minHeight: "100vh"}}>
       <div className="mb-6">
       
       <div className="float-right	">
@@ -169,7 +169,7 @@ export function ProbeView() {
         <div className="mb-6 grid grid-cols-1 gap-y-6 gap-x-6 md:grid-cols-1 xl:grid-cols-1">
           
         <Box className="w-full"
-      sx={{ flexGrow: 1, bgcolor: 'background.paper', display: 'flex', height: 300 }}
+      sx={{ flexGrow: 1, bgcolor: 'background.paper', display: 'flex', minHeight: 300 }}
     >
             <Tabs
               orientation="vertical"
@@ -219,32 +219,44 @@ export function ProbeView() {
               <TabPanel value={tabVal} className="w-full" index={0}>
                 <div className="h-60 ">
                   <VolChart showSegments={selectedValueSegments}/>
+                  
                 </div>
-            
+                  <div className="w-full mt-6 mb-24">
+                      <AnomaliesTable category="Volume"/>
+                  </div>
                 </TabPanel>
 
                 <TabPanel value={tabVal} className="w-full" index={1}>
-                <div className="h-60">
-                  <VolChart showSegments={selectedValueSegments}/>
-                </div>
+                {/* <div className="h-96">
+                  <ValChart showSegments={selectedValueSegments}/>
+                </div> */}
+                <div className="w-full mb-24">
+                      <AnomaliesTable category="Validity"/>
+                  </div>
                 </TabPanel>
 
                 <TabPanel value={tabVal} className="w-full" index={2}>
                 <div className="h-60">
-                  <VolChart showSegments={selectedValueSegments}/>
+                  <SchemaView/>
                 </div>
                 </TabPanel>
 
                 <TabPanel value={tabVal} className="w-full" index={3}>
-                <div className="h-60">
-                  <VolChart showSegments={selectedValueSegments}/>
+                <div className="h-96">
+                  <AnomaliesChart showSegments={selectedValueSegments}/>
                 </div>
+                <div className="w-full mt-6 mb-24">
+                      <AnomaliesTable category="Anomalies"/>
+                  </div>
                 </TabPanel>
 
                 <TabPanel value={tabVal} className="w-full" index={4}>
                 <div className="h-60">
-                  <VolChart showSegments={selectedValueSegments}/>
+                  <LossChart showSegments={selectedValueSegments}/>
                 </div>
+                <div className="w-full mt-6 mb-24">
+                      <AnomaliesTable category="Loss"/>
+                  </div>
                 </TabPanel>
 
                 <TabPanel value={tabVal} className="w-full" index={5}>
@@ -253,98 +265,11 @@ export function ProbeView() {
         
           </Box>
             
-          {/* <div className="w-full mt-6">
-              <SamplesTable/>
-          </div> */}
-          {/* <div className="text-center">
-          <Typography variant="h4" color="blue-gray">
-          Issues
-          </Typography>
-          </div> */}
-          <div className="w-full mt-6">
-              <VolAnomaliesTable/>
-          </div>
           
                 
         </div>
 
       </div>
-      {/* <div className="mb-6 mt-12 grid grid-cols-1 gap-y-6 gap-x-6 md:grid-cols-1 xl:grid-cols-1">
-        <div className="mb-1">
-          <Typography variant="h4" color="blue-gray">
-                Volume Analysis - 8 Anomalies
-          </Typography>
-        </div>
-        
-        <Card className="mb-6"><CardBody>
-        <div className="grid grid-cols-3 gap-6">
-          <div className="col-span-1">
-              
-                  <div className="flex items-center justify-around flex-col">
-                    <Typography variant="h5" color="blue-gray">
-                    Total Volume score
-                    </Typography>
-                    <Typography variant="h2" className="text-orange-500 text-7xl">
-                      76%
-                    </Typography>
-                  </div>
-
-                  
-            </div>
-          
-          <div className=" w-full col-span-2">
-            <VolChart showSegments={selectedValueSegments}/>
-          </div>
-        </div>
-
-        <div className="w-full mt-6">
-            <VolAnomaliesTable/>
-        </div>
-        </CardBody>
-        
-        </Card>
-              
-      </div>
-
-      
-
-      <div className="mb-6 mt-12 grid grid-cols-1 gap-y-6 gap-x-6 md:grid-cols-1 xl:grid-cols-1">
-        <div className="mb-1">
-          <Typography variant="h4" color="blue-gray">
-                Validity Analysis - 3 Anomalies
-          </Typography>
-        </div>
-        
-        <Card className="mb-6"><CardBody>
-        <div className="grid grid-cols-3 gap-6">
-          <div className="col-span-1">
-              
-                  <div className="flex items-center justify-around flex-col">
-                    <Typography variant="h5" color="blue-gray">
-                    Total Validity score
-                    </Typography>
-                    <Typography variant="h2" className="text-green-500 text-7xl">
-                      97%
-                    </Typography>
-                  </div>
-
-                  
-            </div>
-          
-          <div className=" w-full col-span-2">
-            <VolChart showSegments={selectedValueSegments}/>
-          </div>
-        </div>
-
-        <div className="w-full mt-6">
-            <VolAnomaliesTable/>
-        </div>
-        </CardBody>
-        
-        </Card>
-              
-      </div> */}
-
       
 
 
