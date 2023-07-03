@@ -8,7 +8,7 @@ import {
   ChartBarIcon
 
 } from "@heroicons/react/24/solid";
-import { Home, ProbeView, Profile, Tables, Notifications } from "@/pages/dashboard";
+import { Home, ProbeView, Plan, Profile, Tables, Notifications } from "@/pages/dashboard";
 import { SignIn, SignUp } from "@/pages/auth";
 
 const icon = {
@@ -30,6 +30,12 @@ export const routes = [
         name: "data source demo",
         path: "/demo",
         element: <ProbeView />,
+      },
+      {
+        icon: <TableCellsIcon {...icon} />,
+        name: "Quality plan",
+        path: "/plan",
+        element: <Plan />,
       },
       // {
       //   icon: <UserCircleIcon {...icon} />,
