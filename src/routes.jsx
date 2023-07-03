@@ -33,7 +33,7 @@ export const routes = [
       },
       {
         icon: <TableCellsIcon {...icon} />,
-        name: "Quality plan",
+        name: "Rules editor",
         path: "/plan",
         element: <Plan />,
       },

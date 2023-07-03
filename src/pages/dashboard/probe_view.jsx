@@ -83,7 +83,7 @@ function a11yProps(index) {
 
 export function ProbeView() {
   const [value, onChange] = useState([new Date(), new Date()]);
-  const [selectedValueSegments, setSelectedValueSegments] = useState(true);
+  const [selectedValueSegments, setSelectedValueSegments] = useState(false);
 
   const handleSetSelectedValueSegments = (event) => {
     setSelectedValueSegments(event.target.checked);
