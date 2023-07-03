@@ -107,7 +107,7 @@ export function ProbeView() {
         </Button>
       </div>
         <Typography variant="h3" className="text-blue-500">
-            Source: <b>kafka-consumer-group-shops</b>
+            Source: <b>spark-group-shops</b>
         </Typography>
         
       </div>
