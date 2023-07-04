@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Switch, FormControl, Select, MenuItem, IconButton, Collapse, TextField, Chip, Box, InputLabel, Checkbox, ListItemText, Input } from '@mui/material';
-import { Edit as EditIcon } from '@mui/icons-material';
+import { Switch, FormControl, Select, MenuItem, IconButton, Collapse, TextField, Chip, Box, InputLabel, Checkbox, ListItemText, Input, Button } from '@mui/material';
+import { Edit as EditIcon, Save as SaveIcon, Add as AddIcon } from '@mui/icons-material';
+import {planSeedData} from '@/data';
+import {sendOpenAIRequest} from './io';
+
 
 const categoryColors = {
   'Volume': 'blue',
@@ -10,9 +13,10 @@ const categoryColors = {
   'Anomalies': 'orange',
 };
 
-const Rule = ({ rule, onToggle, onRuleChange, onSegmentColumnsChange }) => {
-  const [isEditing, setIsEditing] = useState(false);
+const Rule = ({ rule, onToggle, onRuleChange, onSegmentColumnsChange, onSave }) => {
+  const [isEditing, setIsEditing] = useState(rule.isEditing || false);
   const [segmentColumn, setSegmentColumn] = useState('');
+  const [aiPrompt, setAiPrompt] = useState('create a rule to make sure each row donesnt have null in column row_id, the resolution is every 1 hour. no need it to be segmented, do it all over the data');
 
   const handleAddSegmentColumn = () => {
     onSegmentColumnsChange(rule, [...rule.segmentColumns, segmentColumn]);
@@ -23,12 +27,34 @@ const Rule = ({ rule, onToggle, onRuleChange, onSegmentColumnsChange }) => {
     onSegmentColumnsChange(rule, rule.segmentColumns.filter((column) => column !== columnToDelete));
   };
 
+  const handleGenerateRule = async () => {
+    try {
+        const res = {
+          "category": "Validity",
+          "enabled": true,
+          "segment": "Total",
+          "windowSize": "1h",
+          "action": "not_null",
+          "expression": "row_id IS NOT NULL"
+      };//await sendOpenAIRequest(aiPrompt);
+      onRuleChange(rule.id, res);
+      // onRuleChange(rule, 'description', res.description);
+      // onRuleChange(rule, 'segment', res.segment);
+      // onRuleChange(rule, 'windowSize', res.windowSize);
+      // onSegmentColumnsChange(rule, res.segmentColumns);
+      // onRuleChange(rule, 'action', res.action);
+      // onRuleChange(rule, 'expression', res.expression);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
     let description = `${rule.action} ${rule.expression ? rule.expression : ''} over ${rule.windowSize} windows`;
     if (rule.segment === 'By Segment') {
       description += ` segmented by ${rule.segmentColumns.join(', ')}`;
     }
-    onRuleChange(rule, 'description', description);
+    onRuleChange(rule.id, {'description': description});
   }, [rule.action, rule.expression, rule.windowSize, rule.segment, rule.segmentColumns]);
 
   return (
@@ -42,8 +68,8 @@ const Rule = ({ rule, onToggle, onRuleChange, onSegmentColumnsChange }) => {
         </td>
         <td className="p-2">
           {rule.type === 'Custom' && (
-            <IconButton onClick={() => setIsEditing(!isEditing)}>
-              <EditIcon />
+            <IconButton onClick={() => { isEditing ? (onSave(rule) || setIsEditing(!isEditing)) : setIsEditing(!isEditing) }}>
+              {isEditing ? <SaveIcon /> : <EditIcon />}
             </IconButton>
           )}
         </td>
@@ -52,16 +78,30 @@ const Rule = ({ rule, onToggle, onRuleChange, onSegmentColumnsChange }) => {
         <tr>
           <td colSpan={5}>
             <Collapse in={isEditing}>
+            <Box display="flex" flexDirection="column" gap={2}>
               <Box display="flex" flexDirection="row" gap={2}>
-                <FormControl>
-                  <Select value={rule.category} onChange={(e) => onRuleChange(rule, 'category', e.target.value)}>
+                <FormControl sx={{  width: '100%' }}>
+                  <TextField placeholder="AI Prompt" value={aiPrompt} onChange={(e) => setAiPrompt(e.target.value)} />
+                </FormControl>  
+                <FormControl sx={{  width: '150' }}>
+                <Button onClick={handleGenerateRule}>Generate Rule</Button>
+                </FormControl>
+             </Box>
+            <Box display="flex" flexDirection="row" gap={2}>
+                <FormControl sx={{  width: 300 }}>
+                  <InputLabel>Category</InputLabel>
+                  <Select value={rule.category} onChange={(e) => onRuleChange(rule.id, {'category': e.target.value})}>
                     <MenuItem value="Volume">Volume</MenuItem>
                     <MenuItem value="Validity">Validity</MenuItem>
                     <MenuItem value="Schema">Schema</MenuItem>
                     <MenuItem value="Data Loss">Data Loss</MenuItem>
                     <MenuItem value="Anomalies">Anomalies</MenuItem>
                   </Select>
-                  <Select value={rule.action} onChange={(e) => onRuleChange(rule, 'action', e.target.value)}>
+                </FormControl>
+                <FormControl sx={{  width: 300 }}>
+                  <InputLabel>{rule.action}</InputLabel>
+                  <Select value={rule.action} 
+                    onChange={(e) => onRuleChange(rule.id, {'action': e.target.value})}>
                     {rule.category === 'Validity' && (
                       <>
                         <MenuItem value="not_null">Not Null</MenuItem>
@@ -79,6 +119,7 @@ const Rule = ({ rule, onToggle, onRuleChange, onSegmentColumnsChange }) => {
                       <>
                         <MenuItem value="compatibility">Compatibility</MenuItem>
                         <MenuItem value="new_columns">New Columns</MenuItem>
+                        <MenuItem value="column_exists">Column Exists</MenuItem>
                       </>
                     )}
                    
@@ -94,23 +135,34 @@ const Rule = ({ rule, onToggle, onRuleChange, onSegmentColumnsChange }) => {
                       </>
                     )}
                   </Select>
-                  <TextField value={rule.expression} onChange={(e) => onRuleChange(rule, 'expression', e.target.value)} />
-                  <Select value={rule.segment} onChange={(e) => onRuleChange(rule, 'segment', e.target.value)}>
+                </FormControl>
+                <FormControl sx={{  width: 300 }}>
+                  <TextField placeholder="Expression" value={rule.expression} onChange={(e) => onRuleChange(rule.id, {'expression': e.target.value})} />
+                </FormControl>
+            </Box>
+            <Box display="flex" flexDirection="row" gap={2}>
+                <FormControl sx={{  width: 300 }}>
+                  <InputLabel>Segment</InputLabel>
+                  <Select value={rule.segment} onChange={(e) => onRuleChange(rule.id, {'segment': e.target.value})}>
                     <MenuItem value="Total">Total</MenuItem>
                     <MenuItem value="By Segment">By Segment</MenuItem>
                   </Select>
+                </FormControl>
                   {rule.segment === 'By Segment' && (
-                    <div>
-                      <TextField value={segmentColumn} onChange={(e) => setSegmentColumn(e.target.value)} />
+                    <FormControl sx={{  width: 300 }}>
+                      <TextField plceholder="Segment Column" value={segmentColumn} onChange={(e) => setSegmentColumn(e.target.value)} />
                       <IconButton onClick={handleAddSegmentColumn}>
-                        <EditIcon />
+                        <AddIcon />
                       </IconButton>
                       {rule.segmentColumns.map((column) => (
                         <Chip key={column} label={column} onDelete={() => handleDeleteSegmentColumn(column)} />
                       ))}
-                    </div>
+                    </FormControl>
                   )}
-                  <Select value={rule.windowSize} onChange={(e) => onRuleChange(rule, 'windowSize', e.target.value)}>
+                  
+                <FormControl sx={{  width: 300 }}>
+                  <InputLabel>Window Size</InputLabel>
+                  <Select value={rule.windowSize} onChange={(e) => onRuleChange(rule.id, {'windowSize': e.target.value})}>
                     <MenuItem value="5m">5m</MenuItem>
                     <MenuItem value="15m">15m</MenuItem>
                     <MenuItem value="30m">30m</MenuItem>
@@ -118,6 +170,7 @@ const Rule = ({ rule, onToggle, onRuleChange, onSegmentColumnsChange }) => {
                     <MenuItem value="24h">24h</MenuItem>
                   </Select>
                 </FormControl>
+              </Box>
               </Box>
             </Collapse>
           </td>
@@ -129,265 +182,63 @@ const Rule = ({ rule, onToggle, onRuleChange, onSegmentColumnsChange }) => {
 
 export const Plan = () => {
     
-    const [rules, setRules] = useState([
-        {
-          id: 1,
-          type: 'Automatic',
-          category: 'Volume',
-          description: 'Track abnormal rows count in the data over 5m windows',
-          enabled: true,
-          segment: 'Total',
-          windowSize: '5m',
-          segmentColumns: [],
-          action: 'spikes',
-          expression: '',
-        },
-        {
-          id: 2,
-          type: 'Automatic',
-          category: 'Volume',
-          description: 'Track abnormal rows count per segment over 15m windows',
-          enabled: true,
-          segment: 'By Segment',
-          windowSize: '15m',
-          segmentColumns: ['merchant'],
-          action: 'drops',
-          expression: '',
-        },
-        {
-          id: 3,
-          type: 'Automatic',
-          category: 'Validity',
-          description: 'Null checks for all columns over 30m windows',
-          enabled: true,
-          segment: 'Total',
-          windowSize: '30m',
-          segmentColumns: [],
-          action: 'not_null',
-          expression: '',
-        },
-        {
-          id: 4,
-          type: 'Custom',
-          category: 'Validity',
-          description: 'Revenue > 0 over 1h windows',
-          enabled: true,
-          segment: 'By Segment',
-          windowSize: '1h',
-          segmentColumns: ['product'],
-          action: 'condition',
-          expression: 'revenue',
-        },
-        {
-          id: 5,
-          type: 'Automatic',
-          category: 'Schema',
-          description: 'Backward compatibility check over 24h windows',
-          enabled: true,
-          segment: 'Total',
-          windowSize: '24h',
-          segmentColumns: [],
-          action: 'compatibility',
-          expression: '',
-        },
-        {
-          id: 6,
-          type: 'Custom',
-          category: 'Schema',
-          description: 'Nested column existence - details.info.meta over 5m windows',
-          enabled: true,
-          segment: 'By Segment',
-          windowSize: '5m',
-          segmentColumns: ['user'],
-          action: 'compatibility',
-          expression: 'details.info.meta',
-        },
-        {
-          id: 7,
-          type: 'Automatic',
-          category: 'Anomalies',
-          description: 'Abnormal numeric value spikes over 15m windows',
-          enabled: true,
-          segment: 'Total',
-          windowSize: '15m',
-          segmentColumns: [],
-          action: 'value_spikes',
-          expression: '',
-        },
-        {
-          id: 8,
-          type: 'Automatic',
-          category: 'Data Loss',
-          description: 'Abnormal exceptions in decoding over 30m windows',
-          enabled: true,
-          segment: 'By Segment',
-          windowSize: '30m',
-          segmentColumns: ['region'],
-          action: 'decoding_errors',
-          expression: '',
-        },
-        {
-          id: 9,
-          type: 'Custom',
-          category: 'Volume',
-          description: 'Track sudden drops in rows count per segment over 1h windows',
-          enabled: true,
-          segment: 'By Segment',
-          windowSize: '1h',
-          segmentColumns: ['region'],
-          action: 'drops',
-          expression: '',
-        },
-        {
-          id: 10,
-          type: 'Custom',
-          category: 'Validity',
-          description: 'Age > 18 over 24h windows',
-          enabled: true,
-          segment: 'By Segment',
-          windowSize: '24h',
-          segmentColumns: ['user'],
-          action: 'condition',
-          expression: 'age > 18',
-        },
-        {
-            id: 11,
-            type: 'Custom',
-            category: 'Validity',
-            description: 'Value in [1,2,3,4] over 24h windows',
-            enabled: true,
-            segment: 'By Segment',
-            windowSize: '24h',
-            segmentColumns: ['user'],
-            action: 'in_set',
-            expression: 'value:[1,2,3,4]',
-          },
-        {
-          id: 12,
-          type: 'Custom',
-          category: 'Schema',
-          description: 'Check for new columns over 5m windows',
-          enabled: true,
-          segment: 'Total',
-          windowSize: '5m',
-          segmentColumns: [],
-          action: 'new_columns',
-          expression: '',
-        },
-        {
-          id: 13,
-          type: 'Custom',
-          category: 'Data Loss',
-          description: 'Track exceptions in decoding over 15m windows',
-          enabled: true,
-          segment: 'By Segment',
-          windowSize: '15m',
-          segmentColumns: ['region'],
-          action: 'decoding_errors',
-          expression: '',
-        },
-        {
-          id: 14,
-          type: 'Custom',
-          category: 'Anomalies',
-          description: 'Abnormal value drops in numeric columns over 30m windows',
-          enabled: true,
-          segment: 'By Segment',
-          windowSize: '30m',
-          segmentColumns: ['product'],
-          action: 'value_drops',
-          expression: '',
-        },
-        {
-          id: 15,
-          type: 'Automatic',
-          category: 'Volume',
-          description: 'Track abnormal rows count in the data over 1h windows',
-          enabled: true,
-          segment: 'Total',
-          windowSize: '1h',
-          segmentColumns: [],
-          action: 'spikes',
-          expression: '',
-        },
-        {
-          id: 16,
-          type: 'Automatic',
-          category: 'Validity',
-          description: 'Null checks for all columns over 15m windows',
-          enabled: true,
-          segment: 'Total',
-          windowSize: '15m',
-          segmentColumns: [],
-          action: 'not_null',
-          expression: '',
-        },
-        {
-          id: 17,
-          type: 'Automatic',
-          category: 'Schema',
-          description: 'Backward compatibility check over 5m windows',
-          enabled: true,
-          segment: 'Total',
-          windowSize: '5m',
-          segmentColumns: [],
-          action: 'compatibility',
-          expression: '',
-        },
-        {
-          id: 18,
-          type: 'Automatic',
-          category: 'Data Loss',
-          description: 'Abnormal exceptions in decoding over 1h windows',
-          enabled: true,
-          segment: 'Total',
-          windowSize: '1h',
-          segmentColumns: [],
-          action: 'decoding_errors',
-          expression: '',
-        },
-        {
-          id: 19,
-          type: 'Automatic',
-          category: 'Anomalies',
-          description: 'Abnormal numeric value spikes over 24h windows',
-          enabled: true,
-          segment: 'Total',
-          windowSize: '24h',
-          segmentColumns: [],
-          action: 'value_spikes',
-          expression: '',
-        },
-      ]);
+    const [rules, setRules] = useState(planSeedData);
 
-    const [filter, setFilter] = useState({ categories: [], types: [], search: '' });
-  
-    const handleToggle = (rule) => {
-      setRules(rules.map((r) => (r.id === rule.id ? { ...r, enabled: !r.enabled } : r)));
-    };
-  
-    const handleRuleChange = (rule, field, newValue) => {
-      setRules(rules.map((r) => (r.id === rule.id ? { ...r, [field]: newValue } : r)));
-    };
-  
-    const handleSegmentColumnsChange = (rule, newSegmentColumns) => {
-      setRules(rules.map((r) => (r.id === rule.id ? { ...r, segmentColumns: newSegmentColumns } : r)));
-    };
-  
-    const filteredRules = rules
-      .filter(rule => (filter.categories.length === 0 || filter.categories.includes(rule.category)) &&
-        (filter.types.length === 0 || filter.types.includes(rule.type)) &&
-        rule.description.toLowerCase().includes(filter.search.toLowerCase()))
-      .sort((a, b) => {
-        const categoryOrder = ['Volume', 'Validity', 'Schema', 'Data Loss', 'Anomalies'];
-        return categoryOrder.indexOf(a.category) - categoryOrder.indexOf(b.category) || a.type.localeCompare(b.type);
-      });
-  
-    return (
-      <div className="p-4">
-        <h1 className="text-2xl font-bold mb-4">Observability Rules Editor</h1>
-        <Box display="flex" flexDirection="row" gap={2}>
-          <FormControl sx={{ m: 1, width: 300 }}>
+    const [filter, setFilter] = useState({ categories: [], types:[], search: '' });
+
+  const handleToggle = (rule) => {
+    setRules(rules.map((r) => (r.id === rule.id ? { ...r, enabled: !r.enabled } : r)));
+  };
+
+  const handleRuleChange = (ruleId, newFields) => {
+    setRules(rules.map((r) => {
+      if (r.id === ruleId) {
+        debugger;
+        return { ...r, ...newFields };
+      } else {
+        return r;
+      }
+    }));
+  };
+
+  const handleSegmentColumnsChange = (rule, newSegmentColumns) => {
+    setRules(rules.map((r) => (r.id === rule.id ? { ...r, segmentColumns: newSegmentColumns } : r)));
+  };
+
+  const handleAddNew = () => {
+    setRules([{
+      id: rules.length + 1,
+      type: 'Custom',
+      category: '',
+      description: '',
+      enabled: true,
+      segment: '',
+      windowSize: '',
+      segmentColumns: [],
+      action: '',
+      expression: '',
+      isEditing: true,
+    }, ...rules]);
+  };
+
+  const handleSave = (rule) => {
+    setRules(rules.map((r) => (r.id === rule.id ? { ...r, isEditing: false } : r)));
+  };
+
+  const filteredRules = rules
+    .filter(rule => (filter.categories.length === 0 || filter.categories.includes(rule.category)) &&
+      (filter.types.length === 0 || filter.types.includes(rule.type)) &&
+      rule.description.toLowerCase().includes(filter.search.toLowerCase()))
+    .sort((a, b) => {
+      const categoryOrder = ['Volume', 'Validity', 'Schema', 'Data Loss', 'Anomalies'];
+      return categoryOrder.indexOf(a.category) - categoryOrder.indexOf(b.category) || a.type.localeCompare(b.type);
+    });
+
+  return (
+    <div className="p-4">
+      <h1 className="text-2xl font-bold mb-4">Observability Rules Editor</h1>
+      <Box display="flex" flexDirection="row" gap={2} justifyContent="space-between">
+      <FormControl sx={{  width: 300 }}>
             <InputLabel id="category-filter-label">Category Filter</InputLabel>
             <Select
               labelId="category-filter-label"
@@ -405,7 +256,7 @@ export const Plan = () => {
               ))}
             </Select>
           </FormControl>
-          <FormControl sx={{ m: 1, width: 300 }}>
+          <FormControl sx={{  width: 300 }}>
             <InputLabel id="type-filter-label">Type Filter</InputLabel>
             <Select
               labelId="type-filter-label"
@@ -430,26 +281,28 @@ export const Plan = () => {
               onChange={(e) => setFilter({ ...filter, search: e.target.value })}
             />
           </FormControl>
-        </Box>
-        <table className="w-full">
-          <thead>
-            <tr>
-              <th className="text-left p-2">Type</th>
-              <th className="text-left p-2">Category</th>
-              <th className="text-left p-2">Description</th>
-              <th className="text-left p-2">Enabled</th>
-              <th className="text-left p-2">Edit</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredRules.map((rule) => (
-              <Rule key={rule.id} rule={rule} onToggle={handleToggle} onRuleChange={handleRuleChange} onSegmentColumnsChange={handleSegmentColumnsChange} />
-            ))}
-          </tbody>
-        </table>
-      </div>
-    );
-  };
-  
-  export default Plan;
-  
+        <Button onClick={handleAddNew}>
+          Add new
+        </Button>
+      </Box>
+      <table className="w-full">
+        <thead>
+          <tr>
+            <th className="text-left p-2">Type</th>
+            <th className="text-left p-2">Category</th>
+            <th className="text-left p-2">Description</th>
+            <th className="text-left p-2">Enabled</th>
+            <th className="text-left p-2">Edit</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredRules.map((rule) => (
+            <Rule key={rule.id} rule={rule} onToggle={handleToggle} onRuleChange={handleRuleChange} onSegmentColumnsChange={handleSegmentColumnsChange} onSave={handleSave} />
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+};
+
+export default Plan;
