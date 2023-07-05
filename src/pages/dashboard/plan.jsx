@@ -31,12 +31,6 @@ const Rule = ({ rule, onToggle, onRuleChange, onSegmentColumnsChange, onSave }) 
     try {
         const res = await sendOpenAIRequest(aiPrompt);
       onRuleChange(rule.id, res);
-      // onRuleChange(rule, 'description', res.description);
-      // onRuleChange(rule, 'segment', res.segment);
-      // onRuleChange(rule, 'windowSize', res.windowSize);
-      // onSegmentColumnsChange(rule, res.segmentColumns);
-      // onRuleChange(rule, 'action', res.action);
-      // onRuleChange(rule, 'expression', res.expression);
     } catch (error) {
       console.error(error);
     }
