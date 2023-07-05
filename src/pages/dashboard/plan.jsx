@@ -29,14 +29,7 @@ const Rule = ({ rule, onToggle, onRuleChange, onSegmentColumnsChange, onSave }) 
 
   const handleGenerateRule = async () => {
     try {
-        const res = {
-          "category": "Validity",
-          "enabled": true,
-          "segment": "Total",
-          "windowSize": "1h",
-          "action": "not_null",
-          "expression": "row_id IS NOT NULL"
-      };//await sendOpenAIRequest(aiPrompt);
+        const res = await sendOpenAIRequest(aiPrompt);
       onRuleChange(rule.id, res);
       // onRuleChange(rule, 'description', res.description);
       // onRuleChange(rule, 'segment', res.segment);
@@ -100,44 +93,44 @@ const Rule = ({ rule, onToggle, onRuleChange, onSegmentColumnsChange, onSave }) 
                 </FormControl>
                 <FormControl sx={{  width: 300 }}>
                   <InputLabel>{rule.action}</InputLabel>
-                  <Select value={rule.action} 
-                    onChange={(e) => onRuleChange(rule.id, {'action': e.target.value})}>
-                    {rule.category === 'Validity' && (
-                      <>
-                        <MenuItem value="not_null">Not Null</MenuItem>
-                        <MenuItem value="in_set">In Set</MenuItem>
-                        <MenuItem value="condition">Condition</MenuItem>
-                      </>
-                    )}
-                    {rule.category === 'Volume' && (
-                      <>
-                        <MenuItem value="spikes">Spikes</MenuItem>
-                        <MenuItem value="drops">Drops</MenuItem>
-                      </>
-                    )}
-                    {rule.category === 'Schema' && (
-                      <>
-                        <MenuItem value="compatibility">Compatibility</MenuItem>
-                        <MenuItem value="new_columns">New Columns</MenuItem>
-                        <MenuItem value="column_exists">Column Exists</MenuItem>
-                      </>
-                    )}
-                   
-                   {rule.category === 'Data Loss' && (
-                      <>
-                        <MenuItem value="decoding_errors">Decoding Errors</MenuItem>
-                      </>
-                    )}
-                    {rule.category === 'Anomalies' && (
-                      <>
-                        <MenuItem value="value_spikes">Value Spikes</MenuItem>
-                        <MenuItem value="value_drops">Value Drops</MenuItem>
-                      </>
-                    )}
+                  <Select 
+                    value={rule.action} 
+                    id="demo-simple-select"
+                    onChange={(e) => {
+                      
+                      onRuleChange(rule.id, {'action': e.target.value})
+                    }}
+                  >
+                    {rule.category === 'Validity' && [
+                      <MenuItem key="not_null" value="not_null">Not Null</MenuItem>,
+                      <MenuItem key="in_set" value="in_set">In Set</MenuItem>,
+                      <MenuItem key="condition" value="condition">Condition</MenuItem>
+                    ]}
+                    
+                    {rule.category === 'Volume' && [
+                      <MenuItem key="spikes" value="spikes">Spikes</MenuItem>,
+                      <MenuItem key="drops" value="drops">Drops</MenuItem>
+                    ]}
+
+                    {rule.category === 'Schema' && [
+                      <MenuItem key="compatibility" value="compatibility">Compatibility</MenuItem>,
+                      <MenuItem key="new_columns" value="new_columns">New Columns</MenuItem>,
+                      <MenuItem key="column_exists" value="column_exists">Column Exists</MenuItem>
+                    ]}
+
+                    {rule.category === 'Data Loss' && [
+                      <MenuItem key="decoding_errors" value="decoding_errors">Decoding Errors</MenuItem>
+                    ]}
+
+                    {rule.category === 'Anomalies' && [
+                      <MenuItem key="value_spikes" value="value_spikes">Value Spikes</MenuItem>,
+                      <MenuItem key="value_drops" value="value_drops">Value Drops</MenuItem>
+                    ]}
                   </Select>
+
                 </FormControl>
                 <FormControl sx={{  width: 300 }}>
-                  <TextField placeholder="Expression" value={rule.expression} onChange={(e) => onRuleChange(rule.id, {'expression': e.target.value})} />
+                  <TextField  placeholder="Expression" value={rule.expression} onChange={(e) => onRuleChange(rule.id, {'expression': e.target.value})} />
                 </FormControl>
             </Box>
             <Box display="flex" flexDirection="row" gap={2}>
