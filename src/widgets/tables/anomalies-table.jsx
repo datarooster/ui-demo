@@ -19,7 +19,7 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-
+import {SparkChart} from '@/widgets/charts';
 
 import {
     ClockIcon,
@@ -34,10 +34,10 @@ import {
   import DangerousIcon from '@mui/icons-material/Dangerous';
   
 function createData(
-  level, title, summary
+  level, title, summary, sparkChartDataPoints
 ) {
   return {
-    level, title, summary,
+    level, title, summary, sparkChartDataPoints,
     history: [
       {
         date: '2020-01-05',
@@ -74,10 +74,14 @@ function Row(props) {
         </TableCell>
         <TableCell align="left">{row.title}</TableCell>
         <TableCell align="left">{row.summary}</TableCell>
+        <TableCell align="left">
+          <div className="h-10">
+            <SparkChart dataPoints={row.sparkChartDataPoints}/>
+          </div>
+        </TableCell>
         <TableCell align="center">
-
             <Button variant="contained">
-                Resolve
+                Set<br/>Action
             </Button>
         </TableCell>
       </TableRow>
@@ -86,7 +90,7 @@ function Row(props) {
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
               <Typography variant="h6" gutterBottom component="div">
-                History
+                Samples
               </Typography>
               <Table size="small" aria-label="purchases">
                 <TableHead>
@@ -128,29 +132,30 @@ export function AnomaliesTable ({category}){
   switch (category){
       case 'Volume':
         rows = [
-          createData(<><DangerousIcon/></>, 'Volume drop', 'Average volume has dropped by 25% since 2 hours ago'),
-          createData(<><DangerousIcon/></>, 'Freshness Issue', 'No data from Merchant 7 for 10 hours'),
+          createData(<><DangerousIcon/></>, 'Volume drop', 'Total Volume dropped (-205%) 15 minutes ago', [100, 100, 100, 100, 100, 100, 100, 100, 25, 25, 30, 40, 25, 25, 25, 25, 25]),          
+          createData(<><DangerousIcon/></>, 'Freshness Issue', 'No data from Merchant "Sony" for 24 hours', [0,0,0,0,0,0,0,0,0,0,0,0,0,0]),
+          createData(<><WarningIcon/></>, 'Spike', 'Sudden spike (+510%) for Merchant "Shopify" 2 minutes ago', [0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,100,100]),
         ];
         break;
       case 'Validity':
           rows = [
-            createData( <><DangerousIcon/></>, '“revenue” completeness', '20% of segments show an increased amount of NULL values in column "revenue"'),
-            createData(<><WarningIcon/></>, 'Unidentified value', 'New value observed in column "source_type" with value "META"'),
+            createData( <><DangerousIcon/></>, '“revenue” completeness', '20% of segments show an increased amount of NULL values in column "revenue"', [0,0,0,0,0,0,0,50,50,50,50,50,50,60,60]),
+            createData(<><WarningIcon/></>, 'Unidentified value', 'New value observed in column "source_type" with value "META"', [0,0,0,0,0,0,0,0,0,0,0,100,100,100,100,100,100]),
           ];
           break;
-      case 'Anomalies':
-        rows = [
-          createData(<><DangerousIcon/></>, 'Abnormal values', 'Abnormal values detected in the "total_shops" column'),
-          createData(<><WarningIcon/></>, 'Outliers in "revenue"', 'Increased outliers detected in the "revenue" column'),
+      // case 'Anomalies':
+      //   rows = [
+      //     createData(<><DangerousIcon/></>, 'Abnormal values', 'Abnormal values detected in the "total_shops" column'),
+      //     createData(<><WarningIcon/></>, 'Outliers in "revenue"', 'Increased outliers detected in the "revenue" column'),
     
-        ];
-        break;
-      case 'Loss':
-          rows = [
-            createData(<><WarningIcon/></>, 'Loss detected', '1500+ Errors: "Protocol message contained a tag with an invalid wire type"'),
-            createData(<><WarningIcon/></>, 'Loss detected', '10K Errors: "Decoder throws exception when decoding an empty map"'),
-          ];
-          break;
+      //   ];
+      //   break;
+      // case 'Loss':
+      //     rows = [
+      //       createData(<><WarningIcon/></>, 'Loss detected', '1500+ Errors: "Protocol message contained a tag with an invalid wire type"'),
+      //       createData(<><WarningIcon/></>, 'Loss detected', '10K Errors: "Decoder throws exception when decoding an empty map"'),
+      //     ];
+      //     break;
         
 
   }
@@ -165,6 +170,7 @@ export function AnomaliesTable ({category}){
             <TableCell>Issue Title</TableCell>
             
             <TableCell align="left">Summary</TableCell>
+            <TableCell align="left" className="w-44">Trend</TableCell>
             <TableCell align="center">Actions</TableCell>
           </TableRow>
         </TableHead>

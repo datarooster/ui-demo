@@ -1,7 +1,7 @@
 import React from "react";
 import { Chart } from "react-charts";
 
-export function VolChart({dataPoints}) {
+export function SparkChart({dataPoints}) {
   
   const data = [
     {
@@ -13,7 +13,7 @@ export function VolChart({dataPoints}) {
   const startTime = new Date(); // Get the current time
   
   // Generate data points for 10 minutes
-  for (let i = 0; i < len(dataPoints); i++) {
+  for (let i = 0; i < dataPoints.length; i++) {
     const time = new Date(startTime.getTime() + i * 30 * 1000); // Increment time by 30 seconds
   
     // Add the data point to the data array
@@ -40,6 +40,8 @@ export function VolChart({dataPoints}) {
         getValue: (datum) => datum.secondary,
         show: false,
         showDatumElements: false,
+        min: 0,
+        max: 100
       },
     ],
     []
