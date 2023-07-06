@@ -83,12 +83,25 @@ function a11yProps(index) {
   };
 }
 
+const columns = [
+  { key: 'id', label: 'ID', type: 'string' },
+  { key: 'timestamp', label: 'Timestamp', type: 'datetime' },
+  { key: 'merchant', label: 'Merchant', type: 'string' },
+  { key: 'transaction', label: 'Transaction', type: 'string' },
+  { key: 'user_id', label: 'User ID', type: 'string' },
+  { key: 'revenu', label: 'Revenu', type: 'number' },
+];
+
 export function ProbeView() {
-  const [value, onChange] = useState([new Date(), new Date()]);
+  
   const [selectedValueSegments, setSelectedValueSegments] = useState(false);
+  const [isLive, setIsLive] = useState(false);
 
   const handleSetSelectedValueSegments = (event) => {
     setSelectedValueSegments(event.target.checked);
+  };
+  const handleSetIsLive = (event) => {
+    setIsLive(event.target.checked);
   };
 
   const [tabVal, setTabValue] = React.useState(0);
@@ -152,7 +165,8 @@ export function ProbeView() {
           <Switch
                   id="doLive"
                   label="Live"
-                  defaultChecked={true}
+                  defaultChecked={isLive}
+                  onChange={handleSetIsLive} 
                   labelProps={{
                     className: "text-sm font-normal text-blue-gray-500",
                   }}
@@ -264,7 +278,7 @@ export function ProbeView() {
                 </TabPanel>
 
                 <TabPanel value={tabVal} className="w-full" index={5}>
-                <SamplesTable/>
+                <SamplesTable columns={columns} isLive={isLive} />
                 </TabPanel>
         
           </Box>
