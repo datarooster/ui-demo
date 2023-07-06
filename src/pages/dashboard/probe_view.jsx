@@ -215,7 +215,7 @@ export function ProbeView() {
               } {...a11yProps(4)}/>
 
               <Tab label={
-                <Typography variant="h6">Samples</Typography>
+                <Typography variant="h6">Live Sampler</Typography>
 
               } {...a11yProps(4)}/>
             </Tabs>
@@ -246,9 +246,9 @@ export function ProbeView() {
                 </TabPanel>
 
                 <TabPanel value={tabVal} className="w-full" index={3}>
-                <div className="h-96">
+                {/* <div className="h-96">
                   <AnomaliesChart showSegments={selectedValueSegments}/>
-                </div>
+                </div> */}
                 <div className="w-full mt-6 mb-24">
                       <AnomaliesTable category="Anomalies"/>
                   </div>

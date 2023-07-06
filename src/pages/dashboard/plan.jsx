@@ -30,7 +30,7 @@ const Rule = ({ rule, onToggle, onRuleChange, onSegmentColumnsChange, onSave }) 
   const handleGenerateRule = async () => {
     try {
         const res = await sendOpenAIRequest(aiPrompt);
-      onRuleChange(rule.id, res);
+        onRuleChange(rule.id, res);
     } catch (error) {
       console.error(error);
     }
@@ -180,7 +180,6 @@ export const Plan = () => {
   const handleRuleChange = (ruleId, newFields) => {
     setRules(rules.map((r) => {
       if (r.id === ruleId) {
-        debugger;
         return { ...r, ...newFields };
       } else {
         return r;

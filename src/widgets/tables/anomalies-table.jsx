@@ -143,19 +143,18 @@ export function AnomaliesTable ({category}){
             createData(<><WarningIcon/></>, 'Unidentified value', 'New value observed in column "source_type" with value "META"', [0,0,0,0,0,0,0,0,0,0,0,100,100,100,100,100,100]),
           ];
           break;
-      // case 'Anomalies':
-      //   rows = [
-      //     createData(<><DangerousIcon/></>, 'Abnormal values', 'Abnormal values detected in the "total_shops" column'),
-      //     createData(<><WarningIcon/></>, 'Outliers in "revenue"', 'Increased outliers detected in the "revenue" column'),
-    
-      //   ];
-      //   break;
-      // case 'Loss':
-      //     rows = [
-      //       createData(<><WarningIcon/></>, 'Loss detected', '1500+ Errors: "Protocol message contained a tag with an invalid wire type"'),
-      //       createData(<><WarningIcon/></>, 'Loss detected', '10K Errors: "Decoder throws exception when decoding an empty map"'),
-      //     ];
-      //     break;
+      case 'Anomalies':
+        rows = [
+          createData(<><DangerousIcon/></>, 'Abnormal values', 'Abnormal values detected in the "total_shops" column', [0,0,0,0,0,0,0,50,50,50,50,50,50,60,60]),
+          createData(<><WarningIcon/></>, 'Outliers in "revenue"', 'Increased outliers detected in the "revenue" column', [0,0,0,0,0,0,0,0,0,0,0,100,100,100,100,100,100]),
+        ];
+        break;
+      case 'Loss':
+          rows = [
+            createData(<><WarningIcon/></>, 'Loss detected', '1500+ Errors: "Protocol message contained a tag with an invalid wire type"', [0,0,0,0,0,0,0,0,0,0,0,100,100,100,100,100,100]),
+            createData(<><WarningIcon/></>, 'Loss detected', '10K Errors: "Decoder throws exception when decoding an empty map"', [0,0,0,0,0,0,0,40,40,40,40,100,100,100,100,100,100]),
+          ];
+          break;
         
 
   }
