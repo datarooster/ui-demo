@@ -19,6 +19,7 @@
     "@mui/icons-material": "^5.11.16",
     "@mui/lab": "^5.0.0-alpha.134",
     "@mui/material": "^5.13.6",
+    "@react-hook/window-size": "^3.1.1",
     "@react-spring/web": "^9.7.3",
     "@wojtekmaj/react-datetimerange-picker": "^5.2.0",
     "apexcharts": "3.35.5",

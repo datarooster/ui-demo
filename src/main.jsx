@@ -6,6 +6,7 @@ import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "@material-tailwind/react";
 import { MaterialTailwindControllerProvider } from "@/context";
 import "../public/css/tailwind.css";
+import "../public/css/lagRadar.css";
 
 const pathPrefix = process.env.NODE_ENV === 'production'
   ? ''

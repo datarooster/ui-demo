@@ -50,6 +50,8 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Badge from '@mui/material/Badge';
 
+import useLagRadar from "@/widgets/lag-radar";
+
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -94,6 +96,8 @@ export function ProbeView() {
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
   };
+
+  useLagRadar();
 
   return (
     <div className="mt-8" style={{minHeight: "100vh"}}>
