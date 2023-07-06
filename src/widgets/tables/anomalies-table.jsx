@@ -34,10 +34,10 @@ import {
   import DangerousIcon from '@mui/icons-material/Dangerous';
   
 function createData(
-  level, title, summary, sparkChartDataPoints
+  level, title, when, summary, sparkChartDataPoints
 ) {
   return {
-    level, title, summary, sparkChartDataPoints,
+    level, title, when, summary, sparkChartDataPoints,
     history: [
       {
         date: '2020-01-05',
@@ -73,6 +73,7 @@ function Row(props) {
           {row.level}
         </TableCell>
         <TableCell align="left">{row.title}</TableCell>
+        <TableCell align="left">{row.when}</TableCell>
         <TableCell align="left">{row.summary}</TableCell>
         <TableCell align="left">
           <div className="h-10">
@@ -132,27 +133,27 @@ export function AnomaliesTable ({category}){
   switch (category){
       case 'Volume':
         rows = [
-          createData(<><DangerousIcon/></>, 'Volume drop', 'Total Volume dropped (-205%) 15 minutes ago', [100, 100, 100, 100, 100, 100, 100, 100, 25, 25, 30, 40, 25, 25, 25, 25, 25]),          
-          createData(<><DangerousIcon/></>, 'Freshness Issue', 'No data from Merchant "Sony" for 24 hours', [0,0,0,0,0,0,0,0,0,0,0,0,0,0]),
-          createData(<><WarningIcon/></>, 'Spike', 'Sudden spike (+510%) for Merchant "Shopify" 2 minutes ago', [0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,100,100]),
+          createData(<><DangerousIcon/></>, 'Volume drop', '15 minutes ago', 'Total Volume dropped (-205%)', [100, 100, 100, 100, 100, 100, 100, 100, 25, 25, 30, 40, 25, 25, 25, 25, 25]),          
+          createData(<><DangerousIcon/></>, 'Freshness Issue', '24 hours ago', 'No data from Merchant "Sony"', [0,0,0,0,0,0,0,0,0,0,0,0,0,0]),
+          createData(<><WarningIcon/></>, 'Spike','2 minutes ago', 'Sudden spike (+510%) for Merchant "Shopify"', [0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,100,100]),
         ];
         break;
       case 'Validity':
           rows = [
-            createData( <><DangerousIcon/></>, '“revenue” completeness', '20% of segments show an increased amount of NULL values in column "revenue"', [0,0,0,0,0,0,0,50,50,50,50,50,50,60,60]),
-            createData(<><WarningIcon/></>, 'Unidentified value', 'New value observed in column "source_type" with value "META"', [0,0,0,0,0,0,0,0,0,0,0,100,100,100,100,100,100]),
+            createData( <><DangerousIcon/></>, '“revenue” completeness', '25 minutes ago', '20% of segments show an increased amount of NULL values in column "revenue"', [0,0,0,0,0,0,0,50,50,50,50,50,50,60,60]),
+            createData(<><WarningIcon/></>, 'Unidentified value', '1h ago', 'New value observed in column "source_type" with value "META"', [0,0,0,0,0,0,0,0,0,0,0,100,100,100,100,100,100]),
           ];
           break;
       case 'Anomalies':
         rows = [
-          createData(<><DangerousIcon/></>, 'Abnormal values', 'Abnormal values detected in the "total_shops" column', [0,0,0,0,0,0,0,50,50,50,50,50,50,60,60]),
-          createData(<><WarningIcon/></>, 'Outliers in "revenue"', 'Increased outliers detected in the "revenue" column', [0,0,0,0,0,0,0,0,0,0,0,100,100,100,100,100,100]),
+          createData(<><DangerousIcon/></>, 'Abnormal values', '3h ago', 'Abnormal values detected in the "total_shops" column', [0,0,0,0,0,0,0,50,50,50,50,50,50,60,60]),
+          createData(<><WarningIcon/></>, 'Outliers in "revenue"', '20m ago', 'Increased outliers detected in the "revenue" column', [0,0,0,0,0,0,0,0,0,0,0,100,100,100,100,100,100]),
         ];
         break;
       case 'Loss':
           rows = [
-            createData(<><WarningIcon/></>, 'Loss detected', '1500+ Errors: "Protocol message contained a tag with an invalid wire type"', [0,0,0,0,0,0,0,0,0,0,0,100,100,100,100,100,100]),
-            createData(<><WarningIcon/></>, 'Loss detected', '10K Errors: "Decoder throws exception when decoding an empty map"', [0,0,0,0,0,0,0,40,40,40,40,100,100,100,100,100,100]),
+            createData(<><WarningIcon/></>, 'Loss detected', '1h ago', '1500+ Errors: "Protocol message contained a tag with an invalid wire type"', [0,0,0,0,0,0,0,0,0,0,0,100,100,100,100,100,100]),
+            createData(<><WarningIcon/></>, 'Loss detected', '30m ago', '10K Errors: "Decoder throws exception when decoding an empty map"', [0,0,0,0,0,0,0,40,40,40,40,100,100,100,100,100,100]),
           ];
           break;
         
@@ -166,9 +167,9 @@ export function AnomaliesTable ({category}){
           <TableRow>
             <TableCell />
             <TableCell align="left">Level</TableCell>
-            <TableCell>Issue Title</TableCell>
-            
-            <TableCell align="left">Summary</TableCell>
+            <TableCell>Issue</TableCell>
+            <TableCell align="left">When</TableCell>
+            <TableCell align="left">What happened</TableCell>
             <TableCell align="left" className="w-44">Trend</TableCell>
             <TableCell align="center">Actions</TableCell>
           </TableRow>
