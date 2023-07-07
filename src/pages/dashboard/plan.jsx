@@ -86,7 +86,7 @@ const Rule = ({ rule, onToggle, onRuleChange, onSegmentColumnsChange, onSave }) 
                   </Select>
                 </FormControl>
                 <FormControl sx={{  width: 300 }}>
-                  <InputLabel>{rule.action}</InputLabel>
+                  <InputLabel>Action</InputLabel>
                   <Select 
                     value={rule.action} 
                     id="demo-simple-select"
@@ -180,6 +180,7 @@ export const Plan = () => {
   const handleRuleChange = (ruleId, newFields) => {
     setRules(rules.map((r) => {
       if (r.id === ruleId) {
+
         return { ...r, ...newFields };
       } else {
         return r;
