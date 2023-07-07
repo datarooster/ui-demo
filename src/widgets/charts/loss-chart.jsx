@@ -34,7 +34,7 @@ export function LossChart({showSegments}) {
   
     
     if (showSegments){
-      const valu2 = Math.random() * (3) + 0;
+      const valu2 = Math.random() * (10) + 0;
     
       // Add the data point to the data array
       data[1].data.push({
@@ -43,7 +43,7 @@ export function LossChart({showSegments}) {
       });
 
       for (let j=2; j<5; j++){
-        const valu3 = Math.random() * (3) + 0;
+        const valu3 = Math.random() * (10) + 0;
     
         // Add the data point to the data array
         data[j].data.push({
@@ -53,7 +53,7 @@ export function LossChart({showSegments}) {
     }
     } else {
       // Generate a random value between 80 and 85
-    const value = Math.random() * (1) + 0;
+    const value = Math.random() * (20) + 0;
   
     // Add the data point to the data array
     data[0].data.push({
@@ -71,7 +71,7 @@ export function LossChart({showSegments}) {
 
     if (showSegments){
       // Generate a random value between 80 and 85
-      const value2 = Math.random() * (20) + 40;
+      const value2 = Math.random() * (60) + 400;
     
       // Add the data point to the data array
       data[1].data.push({
@@ -79,7 +79,15 @@ export function LossChart({showSegments}) {
         secondary: value2
       });
 
-      for (let j=2; j<5; j++){
+      const value3 = Math.random() * (50) + 300;
+    
+      // Add the data point to the data array
+      data[2].data.push({
+        primary: time,
+        secondary: value3
+      });
+
+      for (let j=3; j<5; j++){
         const valu3 = Math.random() * (3) + 0;
     
         // Add the data point to the data array
@@ -90,7 +98,7 @@ export function LossChart({showSegments}) {
       }
     } else {
         // Generate a random value between 80 and 85
-        const value = Math.random() * (4) + 20;
+        const value = Math.random() * (20) + 200;
       
         // Add the data point to the data array
         data[0].data.push({

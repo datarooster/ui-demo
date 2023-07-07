@@ -27,7 +27,7 @@ export const routes = [
       },
       {
         icon: <ChartBarIcon {...icon} />,
-        name: "data source demo",
+        name: "data profiler",
         path: "/demo",
         element: <ProbeView />,
       },

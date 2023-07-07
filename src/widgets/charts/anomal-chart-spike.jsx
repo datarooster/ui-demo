@@ -5,23 +5,23 @@ export function AnomalChartSpike({showSegments}) {
   
   const data = [
     {
-      label: "Total Nulls in Source Type",
+      label: "Total 'IOT Alerts'",
       data: [],
     },
     {
-      label: "Kube Pod 1",
+      label: "per Tenant 1",
       data: [],
     },
     {
-      label: "Kube Pod 2",
+      label: "per Tenant 2",
       data: [],
     },
     {
-      label: "Kube Pod 3",
+      label: "per Tenant 3",
       data: [],
     },
     {
-      label: "Kube Pod 4",
+      label: "per Tenant 4",
       data: [],
     }
   ];
@@ -34,7 +34,7 @@ export function AnomalChartSpike({showSegments}) {
   
     
     if (showSegments){
-      const valu2 = Math.random() * (0) + 0;
+      const valu2 = Math.random() * (1) + 10;
     
       // Add the data point to the data array
       data[1].data.push({
@@ -43,7 +43,7 @@ export function AnomalChartSpike({showSegments}) {
       });
 
       for (let j=2; j<5; j++){
-        const valu3 = Math.random() * (0) + 0;
+        const valu3 = Math.random() * (1) + 10;
     
         // Add the data point to the data array
         data[j].data.push({
@@ -53,7 +53,7 @@ export function AnomalChartSpike({showSegments}) {
     }
     } else {
       // Generate a random value between 80 and 85
-    const value = Math.random() * (0) + 0;
+    const value = Math.random() * (3) + 50;
   
     // Add the data point to the data array
     data[0].data.push({
@@ -71,7 +71,7 @@ export function AnomalChartSpike({showSegments}) {
 
     if (showSegments){
       // Generate a random value between 80 and 85
-      const value2 = Math.random() * (0) + 100;
+      const value2 = Math.random() * (0) + 150;
     
       // Add the data point to the data array
       data[1].data.push({
@@ -80,7 +80,7 @@ export function AnomalChartSpike({showSegments}) {
       });
 
       for (let j=2; j<5; j++){
-        const valu3 = Math.random() * (0) + 0;
+        const valu3 = Math.random() * (1) + 10;
     
         // Add the data point to the data array
         data[j].data.push({
@@ -90,7 +90,7 @@ export function AnomalChartSpike({showSegments}) {
       }
     } else {
       // Generate a random value between 80 and 85
-    const value = Math.random() * (0) + 100;
+    const value = Math.random() * (4) + 150;
   
     // Add the data point to the data array
     data[0].data.push({

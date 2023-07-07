@@ -195,7 +195,7 @@ export function AnomaliesTable ({category, isLive, showSegments}){
                     <div className="p-6 text-center">
                       <Typography variant="h6">
                           {
-                            showSegments ? "'Num Shops' over time per segment" : "Total 'Num Shops' over time"
+                            showSegments ? "'IOT Alerts' over time per segment" : "Total 'IOT Alerts' over time"
                           }
 
                       </Typography>
@@ -206,7 +206,7 @@ export function AnomaliesTable ({category, isLive, showSegments}){
                     <div className="p-6">
                         <SamplesTable columns={[
                               { key: 'timestamp', label: 'Timestamp', type: 'datetime' },
-                              { key: 'device', label: 'Device', type: 'string' },
+                              { key: 'tenant', label: 'Tenant', type: 'string' },
                               { key: 'iot_alerts', label: 'Iot Alerts', type: 'number', color: 'red'},
                             ]} isLive={isLive} />
                     </div>

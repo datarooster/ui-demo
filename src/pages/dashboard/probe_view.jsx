@@ -235,6 +235,14 @@ export function ProbeView() {
             </Tabs>
           
               <TabPanel value={tabVal} className="w-full" index={0}>
+              <div className="text-center mb-12 -mt-12">
+                      <Typography variant="h5">
+                          {
+                            selectedValueSegments ? "Volume per segment" : "Data Volume over time"
+                          }
+
+                      </Typography>
+                    </div>
                 <div className="h-60 ">
                   <VolChart showSegments={selectedValueSegments}/>
                   
@@ -269,6 +277,14 @@ export function ProbeView() {
                 </TabPanel>
 
                 <TabPanel value={tabVal} className="w-full" index={4}>
+                <div className="text-center mb-12 -mt-12">
+                      <Typography variant="h4">
+                          {
+                            selectedValueSegments ? "Data errors per segment" : "Data errors over time"
+                          }
+
+                      </Typography>
+                    </div>
                 <div className="h-60">
                   <LossChart showSegments={selectedValueSegments}/>
                 </div>
