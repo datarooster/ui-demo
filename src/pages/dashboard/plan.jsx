@@ -3,7 +3,7 @@ import { Switch, FormControl, Select, MenuItem, IconButton, Collapse, TextField,
 import { Edit as EditIcon, Save as SaveIcon, Add as AddIcon } from '@mui/icons-material';
 import {planSeedData} from '@/data';
 import {sendOpenAIRequest} from './io';
-
+import { Autocomplete } from '@mui/lab';
 
 const categoryColors = {
   'Volume': 'blue',
@@ -13,19 +13,14 @@ const categoryColors = {
   'Anomalies': 'orange',
 };
 
+const seedData = ["ProductID", "ProductName", "Category", "Price", "Quantity", "CustomerID", "PurchaseDate"];
+
+
 const Rule = ({ rule, onToggle, onRuleChange, onSegmentColumnsChange, onSave }) => {
   const [isEditing, setIsEditing] = useState(rule.isEditing || false);
   const [segmentColumn, setSegmentColumn] = useState('');
   const [aiPrompt, setAiPrompt] = useState('create a rule to make sure each row donesnt have null in column row_id, the resolution is every 1 hour. no need it to be segmented, do it all over the data');
 
-  const handleAddSegmentColumn = () => {
-    onSegmentColumnsChange(rule, [...rule.segmentColumns, segmentColumn]);
-    setSegmentColumn('');
-  };
-
-  const handleDeleteSegmentColumn = (columnToDelete) => {
-    onSegmentColumnsChange(rule, rule.segmentColumns.filter((column) => column !== columnToDelete));
-  };
 
   const handleGenerateRule = async () => {
     try {
@@ -124,30 +119,42 @@ const Rule = ({ rule, onToggle, onRuleChange, onSegmentColumnsChange, onSave }) 
 
                 </FormControl>
                 <FormControl sx={{  width: 300 }}>
-                  <TextField  placeholder="Expression" value={rule.expression} onChange={(e) => onRuleChange(rule.id, {'expression': e.target.value})} />
+                  <TextField 
+                    placeholder="Expression"
+                    value={rule.expression || ''} 
+                    onChange={(e) => onRuleChange(rule.id, {'expression': e.target.value})}
+                  />
                 </FormControl>
-            </Box>
-            <Box display="flex" flexDirection="row" gap={2}>
+              </Box>
+              <Box display="flex" flexDirection="row" gap={2}>
                 <FormControl sx={{  width: 300 }}>
                   <InputLabel>Segment</InputLabel>
-                  <Select value={rule.segment} onChange={(e) => onRuleChange(rule.id, {'segment': e.target.value})}>
-                    <MenuItem value="Total">Total</MenuItem>
+                  <Select 
+                    value={rule.segment} 
+                    onChange={(e) => onRuleChange(rule.id, {'segment': e.target.value})}
+                  >
+                    <MenuItem value="All Data">All Data</MenuItem>
                     <MenuItem value="By Segment">By Segment</MenuItem>
                   </Select>
                 </FormControl>
-                  {rule.segment === 'By Segment' && (
-                    <FormControl sx={{  width: 300 }}>
-                      <TextField plceholder="Segment Column" value={segmentColumn} onChange={(e) => setSegmentColumn(e.target.value)} />
-                      <IconButton onClick={handleAddSegmentColumn}>
-                        <AddIcon />
-                      </IconButton>
-                      {rule.segmentColumns.map((column) => (
-                        <Chip key={column} label={column} onDelete={() => handleDeleteSegmentColumn(column)} />
-                      ))}
-                    </FormControl>
-                  )}
-                  
-                <FormControl sx={{  width: 300 }}>
+                {rule.segment === 'By Segment' && (
+                  <FormControl sx={{  width: 300 }}>
+                    <Autocomplete
+                      multiple
+                      options={seedData}
+                      value={rule.segmentColumns}
+                      onChange={(event, newSegmentColumns) => {
+                        onSegmentColumnsChange(rule, newSegmentColumns);
+                      }}
+                      renderInput={(params) => (
+                        <TextField {...params} variant="standard" label="Segment Columns" placeholder="Columns" />
+                      )}
+                    />
+                  </FormControl>
+                )}
+              </Box>
+              <Box display="flex" flexDirection="row" gap={2}>
+              <FormControl sx={{  width: 300 }}>
                   <InputLabel>Window Size</InputLabel>
                   <Select value={rule.windowSize} onChange={(e) => onRuleChange(rule.id, {'windowSize': e.target.value})}>
                     <MenuItem value="5m">5m</MenuItem>
@@ -157,8 +164,9 @@ const Rule = ({ rule, onToggle, onRuleChange, onSegmentColumnsChange, onSave }) 
                     <MenuItem value="24h">24h</MenuItem>
                   </Select>
                 </FormControl>
+
               </Box>
-              </Box>
+            </Box>
             </Collapse>
           </td>
         </tr>
