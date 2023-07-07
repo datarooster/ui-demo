@@ -25,6 +25,35 @@ const generateRandomValue = (type) => {
         Date.now() - Math.floor(Math.random() * 10000000000)
       );
       return randomTimestamp.toISOString();
+    case 'base64':
+        // Generate a fake encoded Protobuf message
+        const protobufMessage = { foo: 'bar', baz: Math.floor(Math.random() * 10000000000) };
+        const encodedMessage = btoa(JSON.stringify(protobufMessage));
+        return encodedMessage;
+    case 'stack':
+       // Generate a fake stacktrace with protobuf errors
+      const stacktrace = [];
+
+      // Generate a fake error message
+      const errorMessage = 'Protobuf decoding error';
+
+      // Generate a random number of stack frames (between 1 and 5)
+      const numFrames = Math.floor(Math.random() * 5) + 1;
+
+      stacktrace.push(`ERROR: ${errorMessage}`);
+      for (let i = 0; i < numFrames; i++) {
+        // Generate a fake stack frame with a random function name and line number
+        const functionName = `function${i}`;
+        const lineNumber = Math.floor(Math.random() * 100) + 1;
+        const fileName = `file${i}.js`;
+
+        stacktrace.push(`  File "${fileName}", line ${lineNumber}, in ${functionName}`);
+      }
+
+      // Add the error message at the end of the stacktrace
+      stacktrace.push(`RuntimeError: ${errorMessage}`);
+
+      return stacktrace.join('\n');
     default:
       return type;
   }

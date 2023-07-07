@@ -51,7 +51,7 @@ import Tab from '@mui/material/Tab';
 import Badge from '@mui/material/Badge';
 
 import useLagRadar from "@/widgets/lag-radar";
-
+import { Link } from "react-router-dom";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -117,11 +117,13 @@ export function ProbeView() {
       <div className="mb-6">
       
       <div className="float-right	">
+        <Link to="/dashboard/plan">
       <Button size="lg" variant="contained" className="flex items-center gap-3">
       Edit Rules
         <PencilIcon strokeWidth={2} className="h-5 w-5"/>
             
         </Button>
+        </Link>
       </div>
         <Typography variant="h3" className="text-blue-500">
             Source: <b>spark-group-shops</b>

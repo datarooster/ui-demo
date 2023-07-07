@@ -215,8 +215,50 @@ export function AnomaliesTable ({category, isLive, showSegments}){
         break;
       case 'Loss':
           rows = [
-            createData(<><WarningIcon/></>, 'Loss detected', '1h ago', '1500+ Errors: "Protocol message contained a tag with an invalid wire type"', [0,0,0,0,0,0,0,0,0,0,0,100,100,100,100,100,100]),
-            createData(<><WarningIcon/></>, 'Loss detected', '30m ago', '10K Errors: "Decoder throws exception when decoding an empty map"', [0,0,0,0,0,0,0,40,40,40,40,100,100,100,100,100,100]),
+            createData(<><WarningIcon/></>, 'Loss detected', '1h ago', '1500+ Errors: "Protocol message contained a tag with an invalid wire type"', [0,0,0,0,0,0,0,0,0,0,0,100,100,100,100,100,100],
+                            <div className="p-6">
+                            <div className="p-6 text-center">
+                              <Typography variant="h6">
+                                  {
+                                    showSegments ? "Decoding Failures over time per segment" : "Decoding Failures over time"
+                                  }
+
+                              </Typography>
+                            </div>
+                            <div className="h-40 p-6 mb-12">
+                              <AnomalChartSpike showSegments={showSegments}/>
+                            </div>
+                            <div className="p-6">
+                                <SamplesTable columns={[
+                                      { key: 'timestamp', label: 'Timestamp', type: 'datetime' },
+                                      { key: 'payload', label: 'Payload', type: 'base64', color: 'red'},
+                                      { key: 'stacktrace', label: 'Stacktrace', type: 'stack', color: 'blue'},
+                                    ]} isLive={isLive} />
+                            </div>
+                          </div>),
+            createData(<><WarningIcon/></>, 'Loss detected', '30m ago', '10K Errors: "Decoder throws exception when decoding an empty map"', [0,0,0,0,0,0,0,40,40,40,40,100,100,100,100,100,100],
+            
+                          <div className="p-6">
+                                  <div className="p-6 text-center">
+                                  <Typography variant="h6">
+                                  {
+                                    showSegments ? "Decoding Failures over time per segment" : "Decoding Failures over time"
+                                  }
+
+                              </Typography>
+                                  </div>
+                                  <div className="h-40 p-6 mb-12">
+                                    <AnomalChartSpike showSegments={showSegments}/>
+                                  </div>
+                                  <div className="p-6">
+                                      <SamplesTable columns={[
+                                            { key: 'timestamp', label: 'Timestamp', type: 'datetime' },
+                                            { key: 'payload', label: 'Payload', type: 'base64', color: 'red'},
+                                            { key: 'stacktrace', label: 'Stacktrace', type: 'stack', color: 'blue'},
+                                          ]} isLive={isLive} />
+                                  </div>
+                                </div>),
+
           ];
           break;
         
