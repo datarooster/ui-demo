@@ -54,13 +54,16 @@ const Rule = ({ rule, onToggle, onRuleChange, onSegmentColumnsChange, onSave }) 
         <tr>
           <td colSpan={5}>
             <Collapse in={isEditing}>
+              <div className="p-6 mt-6">
             <RuleEditor
                 rule={rule}
                 onRuleChange={onRuleChange}
                 onSegmentColumnsChange={onSegmentColumnsChange}
                 onSave={onSave}
               />
+              </div>
             </Collapse>
+
           </td>
         </tr>
       )}
