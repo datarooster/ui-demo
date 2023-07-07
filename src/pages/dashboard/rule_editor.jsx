@@ -33,7 +33,7 @@ const RuleEditor = ({
   onSave
 }) => {
   const [aiPrompt, setAiPrompt] = useState(
-    '', //'create a rule to make sure each row doesn\'t have null in column row_id, the resolution is every 1 hour. no need it to be segmented, do it all over the data'
+    '', 
   );
   const [showAIPrompt, setShowAIPrompt] = useState(false);
   const [isLoading, setLoading] = useState(false);
@@ -41,7 +41,7 @@ const RuleEditor = ({
   const [snackbarMessage, setSnackbarMessage] = useState('');
 
   const handleGenerateRule = async () => {
-    if (!apiKey) {
+    if (typeof apiKey === 'undefined') {
       setSnackbarMessage('Please enter an API key.');
       setSnackbarOpen(true);
       return;
@@ -109,12 +109,7 @@ const RuleEditor = ({
             gap={2}
           >
             <FormControl sx={{ width: '100%' }}>
-              <TextField
-                placeholder="Describe what to monitor..."
-                className="text-white"
-                value={aiPrompt}
-                onChange={(e) => setAiPrompt(e.target.value)}
-              />
+              
               <AiPromptInput value={aiPrompt}
                 onChange={setAiPrompt}/>
             </FormControl>

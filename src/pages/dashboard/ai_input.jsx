@@ -1,19 +1,7 @@
 import React, { useState } from 'react';
-import {
-    Box,
-    FormControl,
-    TextField,
-    InputLabel,
-    Select,
-    MenuItem,
-    Autocomplete,
-    Button,
-    IconButton,
-    CircularProgress,
-    Snackbar,
-  } from '@mui/material';
+import { Autocomplete, TextField } from '@mui/material';
 
-const AiPromptInput = ({value, onChange}) => {
+const AiPromptInput = ({ value, onChange }) => {
   const [isFocused, setIsFocused] = useState(false);
 
   const handleInputChange = (event, value) => {
@@ -29,16 +17,13 @@ const AiPromptInput = ({value, onChange}) => {
   };
 
   const exampleOptions = [
-    'Example 1',
-    'Example 2',
-    'Example 3',
-    // Add more example options as needed
-  ];
+    'Monitor Count spikes per segment org_id+user_id on 30m windows', 
+    'Track when data loss detected continously more than 1 hour', 
+    'make sure each tenant (track by tenant_id) has revenue bigger than 0 at least once per 30 minutes'];
 
   return (
     <Autocomplete
       options={exampleOptions}
-      freeSolo
       value={value}
       onChange={handleInputChange}
       onFocus={handleInputFocus}
@@ -52,9 +37,13 @@ const AiPromptInput = ({value, onChange}) => {
           onChange={handleInputChange}
         />
       )}
-      renderOption={(option) => option}
+      renderOption={(props, option) => (
+        <li {...props}>
+          {option}
+        </li>
+      )}
+      getOptionLabel={(option) => option}
       open={isFocused && exampleOptions.length > 0}
-      // You can customize the appearance and behavior further using other Autocomplete props
     />
   );
 };
