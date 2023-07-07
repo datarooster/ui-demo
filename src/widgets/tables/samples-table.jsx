@@ -67,7 +67,7 @@ const createData = (columns) => {
   return row;
 };
 
-export const SamplesTable = ({ columns, isLive }) => {
+export const SamplesTable = ({ columns, isLive, maxHeight }) => {
   const [open, setOpen] = useState(false);
   const [rows, setRows] = useState([]);
 
@@ -103,7 +103,7 @@ export const SamplesTable = ({ columns, isLive }) => {
         Sampled (every sec)
       </Typography> */}
       {/* <Collapse in={open}> */}
-      <TableContainer component={Paper} style={{ maxHeight: 300 }}>
+      <TableContainer component={Paper} style={{ maxHeight: maxHeight || 300 }}>
         <Table sx={{ minWidth: 450 }} size="small" aria-label="a dense table">
           <TableHead>
             <TableRow>

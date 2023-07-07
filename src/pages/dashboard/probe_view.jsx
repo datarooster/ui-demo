@@ -296,7 +296,7 @@ export function ProbeView() {
                 </TabPanel>
 
                 <TabPanel value={tabVal} className="w-full" index={5}>
-                <SamplesTable columns={columns} isLive={isLive} />
+                <SamplesTable columns={columns} isLive={isLive} maxHeight="50vh"/>
                 </TabPanel>
         
           </Box>
