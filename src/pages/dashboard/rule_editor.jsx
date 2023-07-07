@@ -14,6 +14,7 @@ import {
 } from '@mui/material';
 import { sendOpenAIRequest } from './io';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
+import AiPromptInput from './ai_input';
 
 const seedData = [
   "ProductID",
@@ -32,7 +33,7 @@ const RuleEditor = ({
   onSave
 }) => {
   const [aiPrompt, setAiPrompt] = useState(
-    'create a rule to make sure each row doesn\'t have null in column row_id, the resolution is every 1 hour. no need it to be segmented, do it all over the data'
+    '', //'create a rule to make sure each row doesn\'t have null in column row_id, the resolution is every 1 hour. no need it to be segmented, do it all over the data'
   );
   const [showAIPrompt, setShowAIPrompt] = useState(false);
   const [isLoading, setLoading] = useState(false);
@@ -114,6 +115,8 @@ const RuleEditor = ({
                 value={aiPrompt}
                 onChange={(e) => setAiPrompt(e.target.value)}
               />
+              <AiPromptInput value={aiPrompt}
+                onChange={setAiPrompt}/>
             </FormControl>
             <FormControl sx={{ width: '150' }}>
               <Button onClick={handleGenerateRule} disabled={isLoading}>
