@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Switch, FormControl, Select, MenuItem, IconButton, Collapse, TextField, Chip, Box, InputLabel, Checkbox, ListItemText, Input, Button } from '@mui/material';
-import { Edit as EditIcon, Save as SaveIcon, Add as AddIcon } from '@mui/icons-material';
+import { Edit as EditIcon, Save as SaveIcon, Add as AddIcon , Delete as DeleteIcon} from '@mui/icons-material';
 import {planSeedData} from '@/data';
 import {sendOpenAIRequest} from './io';
 import { Autocomplete } from '@mui/lab';
@@ -50,9 +50,14 @@ const Rule = ({ rule, onToggle, onRuleChange, onSegmentColumnsChange, onSave }) 
         </td>
         <td className="p-2">
           {rule.type === 'Custom' && (
+            <>
             <IconButton onClick={() => { isEditing ? (onSave(rule) || setIsEditing(!isEditing)) : setIsEditing(!isEditing) }}>
               {isEditing ? <SaveIcon /> : <EditIcon />}
             </IconButton>
+            <IconButton onClick={() => { isEditing ? (onSave(rule) || setIsEditing(!isEditing)) : setIsEditing(!isEditing) }}>
+              <DeleteIcon />
+            </IconButton>
+          </>
           )}
         </td>
       </tr>
@@ -147,8 +152,21 @@ const Rule = ({ rule, onToggle, onRuleChange, onSegmentColumnsChange, onSave }) 
                         onSegmentColumnsChange(rule, newSegmentColumns);
                       }}
                       renderInput={(params) => (
-                        <TextField {...params} variant="standard" label="Segment Columns" placeholder="Columns" />
+                        <TextField
+                          {...params}
+                          variant="standard"
+                          label="Segment Columns"
+                          placeholder="Columns"
+                        />
                       )}
+                      freeSolo
+                      onKeyDown={(event) => {
+                        if (event.key === 'Enter' && event.target.value) {
+                          const newValue = [...rule.segmentColumns, event.target.value];
+                          onSegmentColumnsChange(rule, newValue);
+                          event.target.value = '';
+                        }
+                      }}
                     />
                   </FormControl>
                 )}
@@ -287,7 +305,7 @@ export const Plan = () => {
             <th className="text-left p-2">Category</th>
             <th className="text-left p-2">Description</th>
             <th className="text-left p-2">Enabled</th>
-            <th className="text-left p-2">Edit</th>
+            <th className="text-left p-2">Actions</th>
           </tr>
         </thead>
         <tbody>
