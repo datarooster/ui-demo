@@ -85,7 +85,7 @@ function lagRadar(config = {}) {
   };
 
   const calcHue = (() => {
-    const max_hue = 210;
+    const max_hue = 110;
     const max_ms = 1000;
     const log_f = 10;
     const mult = max_hue / Math.log(max_ms / log_f);

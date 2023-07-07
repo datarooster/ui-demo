@@ -14,8 +14,6 @@ import { Typography } from '@material-tailwind/react';
 
 const generateRandomValue = (type) => {
   switch (type) {
-    case 'null':
-      return 'NULL';
     case 'number':
       return Math.floor(Math.random() * 1000);
     case 'string':
@@ -28,7 +26,7 @@ const generateRandomValue = (type) => {
       );
       return randomTimestamp.toISOString();
     default:
-      return '';
+      return type;
   }
 };
 
@@ -72,9 +70,9 @@ export const SamplesTable = ({ columns, isLive }) => {
 
   return (
     <>
-      <Typography variant="h6" className="w-full flex justify-right mb-6">
+      {/* <Typography variant="h6" className="w-full flex justify-right mb-6">
         Sampled (every sec)
-      </Typography>
+      </Typography> */}
       {/* <Collapse in={open}> */}
       <TableContainer component={Paper} style={{ maxHeight: 300 }}>
         <Table sx={{ minWidth: 450 }} size="small" aria-label="a dense table">
@@ -89,8 +87,11 @@ export const SamplesTable = ({ columns, isLive }) => {
             {rows.map((row, index) => (
               <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                 {columns.map((column) => (
-                  <TableCell key={column.key} align="left">
+                  <TableCell key={column.key} align="left" style={{
+                    color: column.color
+                        }}>
                     {row[column.key]}
+                    
                   </TableCell>
                 ))}
               </TableRow>

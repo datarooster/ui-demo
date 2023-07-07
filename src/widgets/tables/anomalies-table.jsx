@@ -20,6 +20,7 @@ import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import {SparkChart} from '@/widgets/charts';
+import {SamplesTable} from "@/widgets/tables";
 
 import {
     ClockIcon,
@@ -30,31 +31,31 @@ import {
     HeartIcon
   } from "@heroicons/react/24/outline";
 
+  import { ValChartNulls, ValChartEnum, AnomalChartDrop, AnomalChartSpike } from "@/widgets/charts";
+
   import WarningIcon from '@mui/icons-material/Warning';
   import DangerousIcon from '@mui/icons-material/Dangerous';
   
 function createData(
-  level, title, when, summary, sparkChartDataPoints
+  level, title, when, summary, sparkChartDataPoints, collapsableContent
 ) {
   return {
     level, title, when, summary, sparkChartDataPoints,
-    history: [
-      {
-        date: '2020-01-05',
-        customerId: '11091700',
-        amount: 3,
-      },
-      {
-        date: '2020-01-02',
-        customerId: 'Anonymous',
-        amount: 1,
-      },
-    ],
+    collapsableContent
   };
 }
 
+const defaultColumns = [
+  { key: 'id', label: 'ID', type: 'string' },
+  { key: 'timestamp', label: 'Timestamp', type: 'datetime' },
+  { key: 'merchant', label: 'Merchant', type: 'string' },
+  { key: 'transaction', label: 'Transaction', type: 'string' },
+  { key: 'user_id', label: 'User ID', type: 'string' },
+  { key: 'revenue', label: 'Revenue', type: 'number' },
+];
+
 function Row(props) {
-  const { row } = props;
+  const { row, isLive } = props;
   const [open, setOpen] = React.useState(false);
 
   return (
@@ -90,33 +91,11 @@ function Row(props) {
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
-              <Typography variant="h6" gutterBottom component="div">
-                Samples
-              </Typography>
-              <Table size="small" aria-label="purchases">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Date</TableCell>
-                    <TableCell>Customer</TableCell>
-                    <TableCell align="right">Amount</TableCell>
-                    <TableCell align="right">Total price ($)</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {row.history.map((historyRow) => (
-                    <TableRow key={historyRow.date}>
-                      <TableCell component="th" scope="row">
-                        {historyRow.date}
-                      </TableCell>
-                      <TableCell>{historyRow.customerId}</TableCell>
-                      <TableCell align="right">{historyRow.amount}</TableCell>
-                      <TableCell align="right">
-                        {Math.round(historyRow.amount * row.price * 100) / 100}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+              {
+                !!(row.collapsableContent) 
+                  ? row.collapsableContent : 
+                  <SamplesTable columns={defaultColumns} isLive={isLive} />
+              }
             </Box>
           </Collapse>
         </TableCell>
@@ -128,7 +107,7 @@ function Row(props) {
 
   
 
-export function AnomaliesTable ({category}){
+export function AnomaliesTable ({category, isLive, showSegments}){
   let rows = [];
   switch (category){
       case 'Volume':
@@ -140,14 +119,98 @@ export function AnomaliesTable ({category}){
         break;
       case 'Validity':
           rows = [
-            createData( <><DangerousIcon/></>, '“revenue” completeness', '25 minutes ago', '20% of segments show an increased amount of NULL values in column "revenue"', [0,0,0,0,0,0,0,50,50,50,50,50,50,60,60]),
-            createData(<><WarningIcon/></>, 'Unidentified value', '1h ago', 'New value observed in column "source_type" with value "META"', [0,0,0,0,0,0,0,0,0,0,0,100,100,100,100,100,100]),
+            createData( <><DangerousIcon/></>, '“revenue” completeness', '25 minutes ago', '+76% increased amount of NULL values in column "revenue"', [0,0,0,0,0,0,0,50,50,50,50,50,50,60,60],
+                  <div className="p-6">
+                    <div className="p-6 text-center">
+                      <Typography variant="h6">
+                          {
+                            showSegments ? "Nulls over time per segment for 'revenue'" : "Total Nulls over time for 'revenue'"
+                          }
+
+                      </Typography>
+                    </div>
+                    <div className="h-40 p-6 mb-12">
+                      <ValChartNulls showSegments={showSegments}/>
+                    </div>
+                    <div className="p-6">
+                        <SamplesTable columns={[
+                              { key: 'id', label: 'ID', type: 'string' },
+                              { key: 'timestamp', label: 'Timestamp', type: 'datetime' },
+                              { key: 'merchant', label: 'Merchant', type: 'Merchant1' },
+                              { key: 'revenue', label: 'Revenue', type: 'null', color: 'red'},
+                            ]} isLive={isLive} />
+                    </div>
+                  </div>),
+            createData(<><WarningIcon/></>, 'Unidentified value', '1h ago', 'New value observed in column "source_type" with value "META"', [0,0,0,0,0,0,0,0,0,0,0,100,100,100,100,100,100],
+                    <div className="p-6">
+                    <div className="p-6 text-center">
+                      <Typography variant="h6">
+                          {
+                            showSegments ? "'META' source_type over time per segment" : "Total 'META' source_type over time"
+                          }
+
+                      </Typography>
+                    </div>
+                    <div className="h-40 p-6 mb-12">
+                      <ValChartEnum showSegments={showSegments}/>
+                    </div>
+                    <div className="p-6">
+                        <SamplesTable columns={[
+                                { key: 'kube_pod', label: 'Kube Pod', type: 'string' },
+                                { key: 'timestamp', label: 'Timestamp', type: 'datetime' },
+                                { key: 'source_type', label: 'Source Type', type: 'META', color: 'red' },
+                                { key: 'count', label: 'Count', type: 'number' },
+
+                          ]} isLive={isLive} />
+                    </div>
+                  </div>),
           ];
           break;
       case 'Anomalies':
         rows = [
-          createData(<><DangerousIcon/></>, 'Abnormal values', '3h ago', 'Abnormal values detected in the "total_shops" column', [0,0,0,0,0,0,0,50,50,50,50,50,50,60,60]),
-          createData(<><WarningIcon/></>, 'Outliers in "revenue"', '20m ago', 'Increased outliers detected in the "revenue" column', [0,0,0,0,0,0,0,0,0,0,0,100,100,100,100,100,100]),
+          createData(<><DangerousIcon/></>, 'Value Drop in column', '3h ago', '"num_shops" avergae value dropped -59% from baseline', [50,50,50,50,50,0,0,0,0,0,0,0],
+                    <div className="p-6">
+                    <div className="p-6 text-center">
+                      <Typography variant="h6">
+                          {
+                            showSegments ? "'Num Shops' over time per segment" : "Total 'Num Shops' over time"
+                          }
+
+                      </Typography>
+                    </div>
+                    <div className="h-40 p-6 mb-12">
+                      <AnomalChartDrop showSegments={showSegments}/>
+                    </div>
+                    <div className="p-6">
+                        <SamplesTable columns={[
+                              { key: 'timestamp', label: 'Timestamp', type: 'datetime' },
+                              { key: 'merchant', label: 'Merchant', type: 'string' },
+                              { key: 'num_shops', label: 'Num Shops', type: 'number', color: 'red'},
+                            ]} isLive={isLive} />
+                    </div>
+                  </div>
+          ),
+          createData(<><WarningIcon/></>, 'Value Spikes in column', '20m ago', 'Increased values detected in the "iot_alerts" column', [0,0,0,0,0,0,0,0,0,0,0,100,100,100,100,100,100],
+                  <div className="p-6">
+                    <div className="p-6 text-center">
+                      <Typography variant="h6">
+                          {
+                            showSegments ? "'Num Shops' over time per segment" : "Total 'Num Shops' over time"
+                          }
+
+                      </Typography>
+                    </div>
+                    <div className="h-40 p-6 mb-12">
+                      <AnomalChartSpike showSegments={showSegments}/>
+                    </div>
+                    <div className="p-6">
+                        <SamplesTable columns={[
+                              { key: 'timestamp', label: 'Timestamp', type: 'datetime' },
+                              { key: 'device', label: 'Device', type: 'string' },
+                              { key: 'iot_alerts', label: 'Iot Alerts', type: 'number', color: 'red'},
+                            ]} isLive={isLive} />
+                    </div>
+                  </div>),
         ];
         break;
       case 'Loss':
@@ -176,7 +239,7 @@ export function AnomaliesTable ({category}){
         </TableHead>
         <TableBody>
           {rows.map((row) => (
-            <Row key={row.name} row={row} />
+            <Row key={row.name} row={row} isLive={isLive}/>
           ))}
         </TableBody>
       </Table>

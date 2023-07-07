@@ -30,7 +30,7 @@ import {
   PencilIcon
 } from "@heroicons/react/24/outline";
 import { StatisticsCard } from "@/widgets/cards";
-import { AnomaliesChart, ValChart, VolChart, LossChart, SchemaView } from "@/widgets/charts";
+import { VolChart, LossChart, SchemaView } from "@/widgets/charts";
 import {
   statisticsCardsData,
   statisticsChartsData,
@@ -95,7 +95,7 @@ const columns = [
 export function ProbeView() {
   
   const [selectedValueSegments, setSelectedValueSegments] = useState(false);
-  const [isLive, setIsLive] = useState(false);
+  const [isLive, setIsLive] = useState(true);
 
   const handleSetSelectedValueSegments = (event) => {
     setSelectedValueSegments(event.target.checked);
@@ -240,7 +240,7 @@ export function ProbeView() {
                   
                 </div>
                   <div className="w-full mt-6 mb-24">
-                      <AnomaliesTable category="Volume"/>
+                      <AnomaliesTable category="Volume" isLive={isLive} showSegments={selectedValueSegments}/>
                   </div>
                 </TabPanel>
 
@@ -249,7 +249,7 @@ export function ProbeView() {
                   <ValChart showSegments={selectedValueSegments}/>
                 </div> */}
                 <div className="w-full mb-24">
-                      <AnomaliesTable category="Validity"/>
+                      <AnomaliesTable category="Validity" isLive={isLive} showSegments={selectedValueSegments}/>
                   </div>
                 </TabPanel>
 
@@ -264,7 +264,7 @@ export function ProbeView() {
                   <AnomaliesChart showSegments={selectedValueSegments}/>
                 </div> */}
                 <div className="w-full mt-6 mb-24">
-                      <AnomaliesTable category="Anomalies"/>
+                      <AnomaliesTable category="Anomalies" isLive={isLive} showSegments={selectedValueSegments}/>
                   </div>
                 </TabPanel>
 
@@ -273,7 +273,7 @@ export function ProbeView() {
                   <LossChart showSegments={selectedValueSegments}/>
                 </div>
                 <div className="w-full mt-6 mb-24">
-                      <AnomaliesTable category="Loss"/>
+                      <AnomaliesTable category="Loss" isLive={isLive} showSegments={selectedValueSegments}/>
                   </div>
                 </TabPanel>
 
