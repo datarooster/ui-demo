@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   FormControl,
@@ -9,77 +9,129 @@ import {
   Autocomplete,
   Button,
   IconButton,
+  CircularProgress,
+  Snackbar,
 } from '@mui/material';
-import {sendOpenAIRequest} from './io';
+import { sendOpenAIRequest } from './io';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
-const seedData = ["ProductID", "ProductName", "Category", "Price", "Quantity", "CustomerID", "PurchaseDate"];
 
+const seedData = [
+  "ProductID",
+  "ProductName",
+  "Category",
+  "Price",
+  "Quantity",
+  "CustomerID",
+  "PurchaseDate",
+];
 
 const RuleEditor = ({
   rule,
   onRuleChange,
   onSegmentColumnsChange,
-  onSave,
+  onSave
 }) => {
+  const [aiPrompt, setAiPrompt] = useState(
+    'create a rule to make sure each row doesn\'t have null in column row_id, the resolution is every 1 hour. no need it to be segmented, do it all over the data'
+  );
+  const [showAIPrompt, setShowAIPrompt] = useState(false);
+  const [isLoading, setLoading] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
 
-    const [aiPrompt, setAiPrompt] = useState('create a rule to make sure each row donesnt have null in column row_id, the resolution is every 1 hour. no need it to be segmented, do it all over the data');
-    const [showAIPrompt, handleToggleAIPrompt] = useState(false);
+  const handleGenerateRule = async () => {
+    if (!apiKey) {
+      setSnackbarMessage('Please enter an API key.');
+      setSnackbarOpen(true);
+      return;
+    }
 
-    const handleGenerateRule = async () => {
-        try {
-            const res = await sendOpenAIRequest(aiPrompt);
-            onRuleChange(rule.id, res);
-        } catch (error) {
-          console.error(error);
-        }
-      };
+    if (!aiPrompt) {
+      setSnackbarMessage('AI prompt should not be empty.');
+      setSnackbarOpen(true);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const res = await sendOpenAIRequest(aiPrompt);
+      onRuleChange(rule.id, res);
+      setShowAIPrompt(false);
+    } catch (error) {
+      console.error(error);
+      setSnackbarMessage('An error occurred while generating the rule.');
+      setSnackbarOpen(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleToggleAIPrompt = () => {
+    setShowAIPrompt((prevValue) => !prevValue);
+  };
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
 
   return (
     <Box display="flex" flexDirection="column" gap={2}>
-        <div className="w-full h-full bg-blue-500 flex justify-center items-center"
-        
-        style={{ 
-            backgroundColor: !showAIPrompt ? 'rgb(33 150 243 / var(--tw-bg-opacity))': 'white',
-            borderColor: showAIPrompt ? 'rgb(33 150 243 / var(--tw-bg-opacity))': 'white',
-            borderStyle: showAIPrompt ? 'solid' : '',
-            borderWidth: showAIPrompt ? '1px' : '',
-            transition: 'all 1s ease',
+      <div
+        className="w-full h-full bg-blue-500 flex justify-center items-center"
+        style={{
+          backgroundColor: !showAIPrompt
+            ? 'rgb(33 150 243 / var(--tw-bg-opacity))'
+            : 'white',
+          borderColor: showAIPrompt
+            ? 'rgb(33 150 243 / var(--tw-bg-opacity))'
+            : 'white',
+          borderStyle: showAIPrompt ? 'solid' : '',
+          borderWidth: showAIPrompt ? '1px' : '',
+          transition: 'all 1s ease',
+        }}
+      >
+        {!showAIPrompt && (
+          <IconButton
+            className="w-full h-full"
+            onClick={handleToggleAIPrompt}
+            color="white"
+          >
+            <AutoFixHighIcon className="text-white" />
+          </IconButton>
+        )}
 
-        }}>
-            {!showAIPrompt && 
-                <IconButton 
-                className="w-full h-full"
-                onClick={()=>{handleToggleAIPrompt(true)}}
-              color="white"
-                >
-                  <AutoFixHighIcon  className="text-white"/>
-                </IconButton>
-            }
+        {showAIPrompt ? (
+          <Box
+            display="flex"
+            className="p-3 pt-6 w-full text-white"
+            flexDirection="column"
+            gap={2}
+          >
+            <FormControl sx={{ width: '100%' }}>
+              <TextField
+                placeholder="Describe what to monitor..."
+                className="text-white"
+                value={aiPrompt}
+                onChange={(e) => setAiPrompt(e.target.value)}
+              />
+            </FormControl>
+            <FormControl sx={{ width: '150' }}>
+              <Button onClick={handleGenerateRule} disabled={isLoading}>
+                {isLoading ? (
+                  <CircularProgress size={24} color="inherit" />
+                ) : (
+                  <>
+                    <span>Generate</span>
+                    <br />
+                    <AutoFixHighIcon />
+                  </>
+                )}
+              </Button>
+            </FormControl>
+          </Box>
+        ) : null}
+      </div>
 
-            {
-                showAIPrompt && (
-                    <Box display="flex" className="p-3 pt-6 w-full text-white" flexDirection="column" gap={2}>
-                            <FormControl sx={{ width: '100%' }}>
-                            <TextField
-                                placeholder="Describe what to monitor..."
-                                className="text-white"
-                                value={aiPrompt}
-                                onChange={(e) => setAiPrompt(e.target.value)}
-                                
-                            />
-                            </FormControl>
-                            <FormControl sx={{ width: '150' }}>
-                            <Button onClick={handleGenerateRule}>
-                                <span>Generate</span><br/>
-                                <AutoFixHighIcon  />
-                                </Button>
-                            </FormControl>
-                        </Box>
-                )
-            }
-            
-            </div>
-      
       <Box display="flex" flexDirection="row" gap={2}>
         <FormControl sx={{ width: 300 }}>
           <InputLabel>Category</InputLabel>
@@ -99,70 +151,56 @@ const RuleEditor = ({
         <FormControl sx={{ width: 300 }}>
           <InputLabel>Action</InputLabel>
           <Select
-            value={rule.action}
-            id="demo-simple-select"
-            onChange={(e) =>
-              onRuleChange(rule.id, { action: e.target.value })
-            }
-          >
-            {rule.category === 'Validity' && (
-              [
-                <MenuItem key="not_null" value="not_null">
-                  Not Null
-                </MenuItem>,
-                <MenuItem key="in_set" value="in_set">
-                  In Set
-                </MenuItem>,
-                <MenuItem key="condition" value="condition">
-                  Condition
-                </MenuItem>
-              ]
-            )}
+  value={rule.action}
+  id="demo-simple-select"
+  onChange={(e) => onRuleChange(rule.id, { action: e.target.value })}
+>
+  {rule.category === 'Validity' && [
+    <MenuItem key="not_null" value="not_null">
+      Not Null
+    </MenuItem>,
+    <MenuItem key="in_set" value="in_set">
+      In Set
+    </MenuItem>,
+    <MenuItem key="condition" value="condition">
+      Condition
+    </MenuItem>,
+  ]}
+  {rule.category === 'Volume' && [
+    <MenuItem key="spikes" value="spikes">
+      Spikes
+    </MenuItem>,
+    <MenuItem key="drops" value="drops">
+      Drops
+    </MenuItem>,
+  ]}
+  {rule.category === 'Schema' && [
+    <MenuItem key="compatibility" value="compatibility">
+      Compatibility
+    </MenuItem>,
+    <MenuItem key="new_columns" value="new_columns">
+      New Columns
+    </MenuItem>,
+    <MenuItem key="column_exists" value="column_exists">
+      Column Exists
+    </MenuItem>,
+  ]}
+  {rule.category === 'Data Loss' && (
+    <MenuItem key="decoding_errors" value="decoding_errors">
+      Decoding Errors
+    </MenuItem>
+  )}
+  {rule.category === 'Anomalies' && [
+    <MenuItem key="value_spikes" value="value_spikes">
+      Value Spikes
+    </MenuItem>,
+    <MenuItem key="value_drops" value="value_drops">
+      Value Drops
+    </MenuItem>,
+  ]}
+</Select>
 
-            {rule.category === 'Volume' && (
-              [
-                <MenuItem key="spikes" value="spikes">
-                  Spikes
-                </MenuItem>,
-                <MenuItem key="drops" value="drops">
-                  Drops
-                </MenuItem>
-              ]
-            )}
 
-            {rule.category === 'Schema' && (
-              [
-                <MenuItem key="compatibility" value="compatibility">
-                  Compatibility
-                </MenuItem>,
-                <MenuItem key="new_columns" value="new_columns">
-                  New Columns
-                </MenuItem>,
-                <MenuItem key="column_exists" value="column_exists">
-                  Column Exists
-                </MenuItem>
-              ]
-            )}
-
-            {rule.category === 'Data Loss' && (
-              
-                <MenuItem key="decoding_errors" value="decoding_errors">
-                  Decoding Errors
-                </MenuItem>
-              
-            )}
-
-            {rule.category === 'Anomalies' && (
-              [
-                <MenuItem key="value_spikes" value="value_spikes">
-                  Value Spikes
-                </MenuItem>,
-                <MenuItem key="value_drops" value="value_drops">
-                  Value Drops
-                </MenuItem>
-              ]
-            )}
-          </Select>
         </FormControl>
         <FormControl sx={{ width: 300 }}>
           <TextField
@@ -233,7 +271,15 @@ const RuleEditor = ({
           </Select>
         </FormControl>
       </Box>
-      <Button onClick={() => onSave(rule)}>Save</Button>
+      <Button onClick={() => onSave(rule)} disabled={isLoading}>
+        Save
+      </Button>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={4000}
+        onClose={handleSnackbarClose}
+        message={snackbarMessage}
+      />
     </Box>
   );
 };
