@@ -8,9 +8,10 @@ import {
   MenuItem,
   Autocomplete,
   Button,
+  IconButton,
 } from '@mui/material';
 import {sendOpenAIRequest} from './io';
-
+import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 const seedData = ["ProductID", "ProductName", "Category", "Price", "Quantity", "CustomerID", "PurchaseDate"];
 
 
@@ -22,7 +23,7 @@ const RuleEditor = ({
 }) => {
 
     const [aiPrompt, setAiPrompt] = useState('create a rule to make sure each row donesnt have null in column row_id, the resolution is every 1 hour. no need it to be segmented, do it all over the data');
-
+    const [showAIPrompt, handleToggleAIPrompt] = useState(false);
 
     const handleGenerateRule = async () => {
         try {
@@ -35,20 +36,50 @@ const RuleEditor = ({
 
   return (
     <Box display="flex" flexDirection="column" gap={2}>
-      <Box display="flex" flexDirection="row" gap={2}>
-        <FormControl sx={{ width: '100%' }}>
-          <TextField
-            placeholder="AI Prompt"
-            value={aiPrompt}
-            onChange={(e) =>
-                handleGenerateRule(e.target.value)
+        <div className="w-full h-full bg-blue-500 flex justify-center items-center"
+        
+        style={{ 
+            backgroundColor: !showAIPrompt ? 'rgb(33 150 243 / var(--tw-bg-opacity))': 'white',
+            borderColor: showAIPrompt ? 'rgb(33 150 243 / var(--tw-bg-opacity))': 'white',
+            borderStyle: showAIPrompt ? 'solid' : '',
+            borderWidth: showAIPrompt ? '1px' : '',
+            transition: 'all 1s ease',
+
+        }}>
+            {!showAIPrompt && 
+                <IconButton 
+                className="w-full h-full"
+                onClick={()=>{handleToggleAIPrompt(true)}}
+              color="white"
+                >
+                  <AutoFixHighIcon  className="text-white"/>
+                </IconButton>
             }
-          />
-        </FormControl>
-        <FormControl sx={{ width: '150' }}>
-          <Button onClick={handleGenerateRule}>Generate Rule</Button>
-        </FormControl>
-      </Box>
+
+            {
+                showAIPrompt && (
+                    <Box display="flex" className="p-3 pt-6 w-full text-white" flexDirection="column" gap={2}>
+                            <FormControl sx={{ width: '100%' }}>
+                            <TextField
+                                placeholder="Describe what to monitor..."
+                                className="text-white"
+                                value={aiPrompt}
+                                onChange={(e) => setAiPrompt(e.target.value)}
+                                
+                            />
+                            </FormControl>
+                            <FormControl sx={{ width: '150' }}>
+                            <Button onClick={handleGenerateRule}>
+                                <span>Generate</span><br/>
+                                <AutoFixHighIcon  />
+                                </Button>
+                            </FormControl>
+                        </Box>
+                )
+            }
+            
+            </div>
+      
       <Box display="flex" flexDirection="row" gap={2}>
         <FormControl sx={{ width: 300 }}>
           <InputLabel>Category</InputLabel>
